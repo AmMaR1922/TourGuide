@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Entities
 {
-    public class Wishlist
+    public class TripActivities 
     {
-        public int TripId { get; set; } 
+        public int TripId { get; set; }
         public Trip Trip { get; set; } = null!;
-        public int UserId { get; set; }
-        public ApplicationUser User { get; set; } = null!;
+        public int ActivityId { get; set; }
+        public Activity Activity { get; set; } = null!;
     }
 }
