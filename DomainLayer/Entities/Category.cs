@@ -9,6 +9,6 @@ namespace DomainLayer.Entities
     public class Category : BaseEntity
     {
         public string Name { get; set; } = null!;
-        ICollection<Trip> Trips { get; set; } = new List<Trip>();
+        public ICollection<Trip> Trips { get; set; } = new List<Trip>();
     }
 }

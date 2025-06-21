@@ -43,6 +43,18 @@ namespace InfrastructureLayer.Data.Context
             base.OnConfiguring(optionsBuilder);
         }
 
+        public DbSet<Trip> Trips { get; set; }
+        public DbSet<TripImages> TripImages { get; set; }
+        public DbSet<TripReviews> TripReviews { get; set; }
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Includes> Includes { get; set; }
+        public DbSet<TripIncludes> TripIncludes { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<TripLanguages> TripLanguages { get; set; }
+        public DbSet<TripActivities> TripActivities { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
 
     }
 }

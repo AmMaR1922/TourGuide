@@ -29,9 +29,10 @@ namespace InfrastructureLayer.Data.Configuration
             #endregion
 
             #region Category
-
-            builder.Property(t => t.Category)
-                .HasMaxLength(100);
+            builder.HasOne(t => t.Category)
+                .WithMany(c => c.Trips)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
             #region Bookings
@@ -41,8 +42,6 @@ namespace InfrastructureLayer.Data.Configuration
             #endregion
 
             #region Wishlists
-
-
             builder.HasMany(t => t.Wishlist)
             .WithOne(w => w.Trip)
             .HasForeignKey(w => w.TripId); 

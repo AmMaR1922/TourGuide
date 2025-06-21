@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Entities
 {
-    public class TripReviews 
+    public class TripReviews : BaseEntity
     {
         public string Comment { get; set; } = null!;
         public int Rating { get; set; }
@@ -14,7 +14,6 @@ namespace DomainLayer.Entities
         public Trip Trip { get; set; } = null!;
         public int UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }
 }
