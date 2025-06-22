@@ -5,6 +5,7 @@ using TourGuide.Extentions;
 var builder = WebApplication.CreateBuilder(args);
 
 ApplicationServicesExtentions.AddApplicationServices(builder.Services, builder.Configuration);
+IdentityServicesExtention.AddIdentityServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 

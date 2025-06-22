@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Entities
 {
-    public class TripActivities : BaseEntity
+    public class TripActivities
     {
         public int TripId { get; set; }
         public Trip Trip { get; set; } = null!;

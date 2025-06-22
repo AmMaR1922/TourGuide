@@ -1,4 +1,6 @@
 ﻿using DomainLayer.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InfrastructureLayer.Data.Context
 {
-    public class TourGuideDbContext : DbContext
+    public class TourGuideDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public TourGuideDbContext(DbContextOptions<TourGuideDbContext> options) : base(options) {}
 
@@ -21,21 +23,21 @@ namespace InfrastructureLayer.Data.Context
             base.OnModelCreating(builder);
 
             // Apply IsDeleted filter to all entities inheriting BaseEntity
-            foreach (var entityType in builder.Model.GetEntityTypes())
-            {
-                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)
-                    && entityType.BaseType == null)
-                {
-                    // e => e.IsDeleted == false
-                    var parameter = Expression.Parameter(entityType.ClrType, "e");
-                    var isDeletedProperty = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
-                    var filter = Expression.Lambda(
-                        Expression.Equal(isDeletedProperty, Expression.Constant(false)),
-                        parameter);
+            //foreach (var entityType in builder.Model.GetEntityTypes())
+            //{
+            //    if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)
+            //        && entityType.BaseType == null)
+            //    {
+            //        // e => e.IsDeleted == false
+            //        var parameter = Expression.Parameter(entityType.ClrType, "e");
+            //        var isDeletedProperty = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+            //        var filter = Expression.Lambda(
+            //            Expression.Equal(isDeletedProperty, Expression.Constant(false)),
+            //            parameter);
 
-                    builder.Entity(entityType.ClrType).HasQueryFilter(filter);
-                }
-            }
+            //        builder.Entity(entityType.ClrType).HasQueryFilter(filter);
+            //    }
+            //}
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

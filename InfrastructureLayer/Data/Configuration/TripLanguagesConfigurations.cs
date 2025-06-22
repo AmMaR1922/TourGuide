@@ -19,6 +19,11 @@ namespace InfrastructureLayer.Data.Configuration
                 .WithMany(t => t.TripLanguages)
                 .HasForeignKey(tl => tl.TripId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(tl => tl.Language)
+                .WithMany(l => l.TripLanguages)
+                .HasForeignKey(tl => tl.LanguageId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

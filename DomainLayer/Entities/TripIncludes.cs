@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Entities
 {
-    public class TripIncludes : BaseEntity
+    public class TripIncludes 
     {
-        public int IncludesId { get; set; }
         public bool IsIncluded { get; set; } = true;
         public int TripId { get; set; }
         public Trip Trip { get; set; } = null!;
-        ICollection<Includes> Include { get; set; } = new List<Includes>();
+        public int IncludesId { get; set; }
+        public Includes Includes { get; set; } = null!;
 
     }
 }

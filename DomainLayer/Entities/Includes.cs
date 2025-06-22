@@ -9,5 +9,6 @@ namespace DomainLayer.Entities
     public class Includes : BaseEntity
     {
         public string Name { get; set; } = null!;
+        public ICollection<TripIncludes> TripIncludes { get; set; } = new List<TripIncludes>();
     }
 }

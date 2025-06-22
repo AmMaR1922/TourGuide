@@ -10,6 +10,6 @@ namespace DomainLayer.Entities
     {
         public string Code { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public ICollection<Trip> Trips { get; set; } = new List<Trip>();
+        public ICollection<TripLanguages> TripLanguages { get; set; } = new List<TripLanguages>();
     }
 }

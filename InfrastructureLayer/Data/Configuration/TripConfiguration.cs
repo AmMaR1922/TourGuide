@@ -35,54 +35,12 @@ namespace InfrastructureLayer.Data.Configuration
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
-            #region Bookings
-            builder.HasMany(t => t.TripBookings)
-               .WithOne(b => b.Trip)
-               .HasForeignKey(b => b.TripId);
-            #endregion
-
-            #region Wishlists
-            builder.HasMany(t => t.Wishlist)
-            .WithOne(w => w.Trip)
-            .HasForeignKey(w => w.TripId); 
-            #endregion
-
-            #region Languages
-            builder.HasMany(t => t.TripLanguages)
-                .WithOne(t => t.Trip)
-                .HasForeignKey(l => l.TripId)
-                .OnDelete(DeleteBehavior.Cascade);
-            #endregion
-
-            #region TripIncludes
-            builder.HasMany(t => t.TripIncludes)
-                .WithOne(ti => ti.Trip)
-                .HasForeignKey(ti => ti.TripId)
-                .OnDelete(DeleteBehavior.Cascade);
-            #endregion
-
             #region TripImages
             builder.HasMany(t => t.TripImages)
                 .WithOne(ti => ti.Trip)
                 .HasForeignKey(ti => ti.TripId)
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
-
-            #region TripReviews
-            builder.HasMany(t => t.TripReviews)
-                .WithOne(ti => ti.Trip)
-                .HasForeignKey(ti => ti.TripId)
-                .OnDelete(DeleteBehavior.Cascade);
-            #endregion
-
-            #region TripActivities
-            builder.HasMany(t => t.Activities)
-                .WithOne(t => t.Trip)
-                .HasForeignKey(ti => ti.TripId);
-            #endregion
-
-
-
 
         }
     }

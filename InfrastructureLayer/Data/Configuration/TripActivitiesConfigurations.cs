@@ -13,7 +13,17 @@ namespace InfrastructureLayer.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<TripActivities> builder)
         {
-            
+            builder.HasKey(t => new {t.TripId, t.ActivityId});
+
+            builder.HasOne(b => b.Trip)
+                .WithMany(t => t.Activities)
+                .HasForeignKey(b => b.TripId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(b => b.Activity)
+                .WithMany(a => a.TripActivities)
+                .HasForeignKey(b => b.ActivityId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -24,7 +24,6 @@ namespace InfrastructureLayer.Data.Configuration
                 .WithMany(u => u.Wishlist)
                 .HasForeignKey(w => w.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 }
