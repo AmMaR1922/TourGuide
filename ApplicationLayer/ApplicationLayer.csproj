@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Helper\" />
     <Folder Include="DTOs\" />
+    <Folder Include="QueryParams\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
