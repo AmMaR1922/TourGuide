@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <Folder Include="Helper\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
   </ItemGroup>
 
 </Project>

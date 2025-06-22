@@ -11,7 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApplicationLayer\ApplicationLayer.csproj" />
     <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Seeding\" />
   </ItemGroup>
 
 </Project>

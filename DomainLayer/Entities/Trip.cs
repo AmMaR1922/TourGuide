@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-   public class Trip : BaseEntity
+    public class Trip : BaseEntity
     {
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
