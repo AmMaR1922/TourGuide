@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-    public class Wishlist
+    public class TripImages : BaseEntity
     {
-        public int TripId { get; set; } 
+        public string ImageURL { get; set; } = null!;
+        public int TripId { get; set; }
         public Trip Trip { get; set; } = null!;
-        public int UserId { get; set; }
-        public ApplicationUser User { get; set; } = null!;
     }
 }

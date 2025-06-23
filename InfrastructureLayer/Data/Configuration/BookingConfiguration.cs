@@ -15,15 +15,23 @@ namespace InfrastructureLayer.Data.Configuration
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Date).IsRequired();
+            builder.Property(b => b.TripDate).IsRequired();
             builder.Property(b => b.CreatedAt).IsRequired();
             builder.Property(b => b.Adults).IsRequired();
             builder.Property(b => b.Children).IsRequired();
 
             builder.Property(b => b.Status)
-                .HasConversion<string>() 
-                .HasMaxLength(20);
- 
+                .HasConversion<int>();
+
+            builder.HasOne(b => b.Trip)
+                .WithMany(t => t.TripBookings)
+                .HasForeignKey(b => b.TripId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
