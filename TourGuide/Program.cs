@@ -1,4 +1,5 @@
 using InfrastructureLayer.Data.Context;
+using InfrastructureLayer.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 using TourGuide.Extentions;
 
@@ -16,8 +17,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+using (var service=app.Services.CreateScope())
+{
+   await IdentitySeeding.IdentitySeedingOperation(service.ServiceProvider);
+}
 
+
+app.UseHttpsRedirection();
+    
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();
