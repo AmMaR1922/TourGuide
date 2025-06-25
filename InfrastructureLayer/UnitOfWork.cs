@@ -28,9 +28,9 @@ namespace InfrastructureLayer
             return await DbContext.Database.BeginTransactionAsync();
         }
 
-        public async Task<int> CompleteAsync()
+        public async Task<bool> CompleteAsync()
         {
-            return await DbContext.SaveChangesAsync();
+            return await DbContext.SaveChangesAsync() > 0;
         }
 
         public IGenericRepository<T> Repository<T>() where T : class
