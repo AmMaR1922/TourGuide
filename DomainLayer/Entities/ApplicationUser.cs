@@ -13,5 +13,7 @@ namespace DomainLayer.Entities
         public ICollection<TripReviews> Reviews { get; set; } = new List<TripReviews>();
         public ICollection<Wishlist> Wishlist { get; set; } = new List<Wishlist>();
 
+        public  HashSet<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
+
     }
 }
