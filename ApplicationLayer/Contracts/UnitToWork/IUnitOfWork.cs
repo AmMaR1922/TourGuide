@@ -11,7 +11,7 @@ namespace ApplicationLayer.Contracts.UnitToWork
     public interface IUnitOfWork
     {
         public IGenericRepository<T> Repository<T>() where T : class;
-        public Task<int> CompleteAsync();
+        public Task<bool> CompleteAsync();
         public Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }
