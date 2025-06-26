@@ -29,13 +29,10 @@ namespace TourGuide.Extentions
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 #endregion
 
-                #region SignIn
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
-                #endregion
-
+               
                 #region Tokens
-                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultProvider;
                 options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
                 options.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultProvider; 
                 #endregion
