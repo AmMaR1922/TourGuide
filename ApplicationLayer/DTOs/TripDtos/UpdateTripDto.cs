@@ -1,5 +1,4 @@
-﻿using DomainLayer.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.TripDtos
 {
-  public  class AddTripDto
+   public class UpdateTripDto
     {
-
         public string Name { get; set; }
         public string Duration { get; set; }
         public string Description { get; set; }
@@ -27,6 +25,4 @@ namespace ApplicationLayer.DTOs.TripDtos
         public List<string> ImageUrls { get; set; }
         public List<string> Reviews { get; set; }
     }
-
 }
- 
