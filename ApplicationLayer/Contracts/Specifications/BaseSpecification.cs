@@ -38,7 +38,7 @@ namespace ApplicationLayer.Contracts.Specifications
 
         public void AddInclude(Func<IQueryable<T>, IIncludableQueryable<T, object>> include)
         {
-            Includes.Add(include);
+            Includes!.Add(include);
         }
 
         public bool IsPaginated { get ; set  ; } = false;
