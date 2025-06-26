@@ -1,5 +1,11 @@
-﻿using InfrastructureLayer.Data.Context;
+﻿using ApplicationLayer.Contracts.Repositories;
+using ApplicationLayer.Contracts.Repositories.CategoryRepoository;
+using ApplicationLayer.Contracts.UnitToWork;
+using InfrastructureLayer;
+using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using TourGuide.Services.CategoryService;
+using TourGuide.Services.TripService;
 
 namespace TourGuide.Extentions
 {
@@ -27,6 +33,12 @@ namespace TourGuide.Extentions
 
             Services.AddDbContext<TourGuideDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
+            Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddScoped<ICategoryRepository, CategoryService>();
+            Services.AddScoped<ITripRepository, TripService>();
+
 
 
 
