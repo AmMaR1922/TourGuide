@@ -13,9 +13,11 @@ namespace DomainLayer.Entities
 
         public string Token { get; set; } = null!;
         public DateTime CreatedOn { get; set; }
-        public DateTime ExpireOne { get; set; }
-        public bool IsExpire => DateTime.UtcNow > ExpireOne.ToUniversalTime();
-        public bool IsActive => !IsExpire;
+        public DateTime ExpireOn { get; set; }
+        public bool IsExpire => DateTime.UtcNow > ExpireOn.ToUniversalTime();
+
+        public DateTime? RevokedOn { get; set; }
+        public bool IsActive => (!IsExpire && RevokedOn is null);
 
 
     }
