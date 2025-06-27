@@ -1,5 +1,4 @@
-﻿
-using ApplicationLayer.Models;
+﻿using ApplicationLayer.Models;
 using DomainLayer.Entities;
 using InfrastructureLayer.Data.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;

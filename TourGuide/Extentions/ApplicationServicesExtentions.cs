@@ -1,7 +1,8 @@
 ﻿using ApplicationLayer.Contracts.Auth;
 using ApplicationLayer.Contracts.Repositories;
-using ApplicationLayer.Contracts.Repositories.CategoryRepoository;
+using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.Contracts.UnitToWork;
+using ApplicationLayer.Services;
 using InfrastructureLayer;
 using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,10 @@ namespace TourGuide.Extentions
 
 
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddScoped<ICategoryServices, CategoryServices>();
+            Services.AddScoped<ITripServices, TripServices>();
+
+
             Services.AddScoped<ICategoryRepository, CategoryService>();
             Services.AddScoped<ITripRepository, TripService>();
             Services.AddScoped<IAuthServices, AuthServices>();
