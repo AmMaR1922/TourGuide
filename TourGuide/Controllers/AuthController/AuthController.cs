@@ -21,7 +21,7 @@ namespace TourGuide.Controllers.AuthController
             if(!ModelState.IsValid)
             {
                 var errors=ModelState.Values.SelectMany(e => e.Errors).Select(e=>e.ErrorMessage).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Add User");
             }
             var result = await authServices.Register(registerDTO);
 
@@ -39,7 +39,7 @@ namespace TourGuide.Controllers.AuthController
             if(!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Login");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Login");
             }
             var result =await authServices.Login(userLoginDTO);
             if (result.Succeeded)
@@ -55,7 +55,7 @@ namespace TourGuide.Controllers.AuthController
             var RefreshToken = Request.Cookies["RefreshToken"];
             if(RefreshToken is null)
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Error While get Refresh Token" }, "Login Again For Security");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Error While get Refresh Token" }, "Login Again For Security");
             }
             var result = await authServices.GetNewToken(RefreshToken);
             if(result.Succeeded)
@@ -73,7 +73,7 @@ namespace TourGuide.Controllers.AuthController
             var Token = RefreshToken?.Token ?? Request.Cookies["RefreshToken"];
             if (Token is null)
             {
-                return APIResponse<string>.FailureResponse(new List<string> { "There is No token" }, "Failed to Logout");
+                return APIResponse<string>.FailureResponse(400,new List<string> { "There is No token" }, "Failed to Logout");
             }
             var result = await authServices.RevokeRefreshToken(Token);
             if(result.Succeeded)
