@@ -22,7 +22,7 @@ using (var service=app.Services.CreateScope())
    await IdentitySeeding.IdentitySeedingOperation(service.ServiceProvider);
 }
 
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
     
 app.UseAuthentication(); 
