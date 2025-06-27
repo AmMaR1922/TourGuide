@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.CategoryDto
 {
-  public   class CategoryDtoResponse
+    public class CategoryToBeUpdatedDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
-
     }
 }
