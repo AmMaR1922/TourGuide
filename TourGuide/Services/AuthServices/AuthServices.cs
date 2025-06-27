@@ -29,13 +29,13 @@ namespace TourGuide.Services.AuthServices
             var user = await UserManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == RefreshToken));
             if(user is null)
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Invalid Token" }, "Login agian Please For security");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400,new List<string> { "Invalid Token" }, "Login agian Please For security");
             }
 
             var RT = user.RefreshTokens!.SingleOrDefault(rt => rt.Token == RefreshToken);
             if(! RT!.IsActive )
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Invalid Token" }, "Login agian Please For security");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400,new List<string> { "Invalid Token" }, "Login agian Please For security");
 
             }
             RT.RevokedOn = DateTime.UtcNow;
@@ -46,7 +46,7 @@ namespace TourGuide.Services.AuthServices
             if(!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Error While Updating User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Error While Updating User");
             }
 
             
@@ -66,7 +66,7 @@ namespace TourGuide.Services.AuthServices
 
 
 
-            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(ApplicationUserResponse, "Access Token Refreshed Succesfully");
+            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(200,ApplicationUserResponse, "Access Token Refreshed Succesfully");
 
 
 
@@ -78,12 +78,12 @@ namespace TourGuide.Services.AuthServices
             var user = await UserManager.FindByEmailAsync(appuser.Email);
             if(user is null)
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Email or password is Incorrect" },"Failed To Login");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Email or password is Incorrect" },"Failed To Login");
             }
 
             if (await UserManager.IsLockedOutAsync(user))
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "account is Lock out Try agian in Few minutes" }, "Failed To Login");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "account is Lock out Try agian in Few minutes" }, "Failed To Login");
 
             }
 
@@ -94,11 +94,11 @@ namespace TourGuide.Services.AuthServices
                  await UserManager.AccessFailedAsync(user);
                 if (await UserManager.IsLockedOutAsync(user))
                 {
-                    return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "account is Lock out Try agian in Few minutes" }, "Failed To Login");
+                    return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "account is Lock out Try agian in Few minutes" }, "Failed To Login");
 
                 }
                
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Email or password is Incorrect" }, "Failed To Login");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Email or password is Incorrect" }, "Failed To Login");
 
             }
             
@@ -133,13 +133,13 @@ namespace TourGuide.Services.AuthServices
                 if(!result.Succeeded)
                 {
                     var errors = result.Errors.Select(e => e.Description).ToList();
-                    return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Login");
+                    return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Login");
                 }
                 ApplicationUserResponse.RefreshTokenExperationDate = RFT!.ExpireOn;
                 ApplicationUserResponse.RefreshToken = RFT.Token;
 
             }
-            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(ApplicationUserResponse,"User Login Succesfully");
+            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(400, ApplicationUserResponse,"User Login Succesfully");
 
 
         }
@@ -149,11 +149,11 @@ namespace TourGuide.Services.AuthServices
             var UserName = appuser.Email.Substring(0, appuser.Email.IndexOf('@'));
             if (await UserManager.FindByEmailAsync(appuser.Email) is not null)
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "Email Is Duplicated Change Email Please" }, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Email Is Duplicated Change Email Please" }, "Failed To Add User");
             }
             if (await UserManager.FindByNameAsync(UserName) is not null)
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> { "UserName Is Duplicated Change Email Please" }, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "UserName Is Duplicated Change Email Please" }, "Failed To Add User");
             }
 
             var user = new ApplicationUser() { 
@@ -166,12 +166,12 @@ namespace TourGuide.Services.AuthServices
             if(!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Add User");
             }
 
             if(!await RoleManager.RoleExistsAsync("NormalUser"))
             {
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(new List<string> {"Role not Exited"}, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> {"Role not Exited"}, "Failed To Add User");
 
             }
 
@@ -179,7 +179,7 @@ namespace TourGuide.Services.AuthServices
             if(!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Add User");
 
             }
           
@@ -190,7 +190,7 @@ namespace TourGuide.Services.AuthServices
             if(!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(errors, "Failed To Add User");
+                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Add User");
             }
 
             var ApplicationUserResponse = new ApplicationUserResponseDTO()
@@ -207,7 +207,7 @@ namespace TourGuide.Services.AuthServices
             };
 
 
-            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(ApplicationUserResponse, "User Added Succesfully");
+            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(200, ApplicationUserResponse, "User Added Succesfully");
 
 
 
@@ -219,12 +219,12 @@ namespace TourGuide.Services.AuthServices
             var user = await UserManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == Token));
             if(user is null)
             {
-                return APIResponse<string>.FailureResponse(new List<string> {"User Not Valid"},"Falied To LogOut");
+                return APIResponse<string>.FailureResponse(400, new List<string> {"User Not Valid"},"Falied To LogOut");
             }
             var RT = user.RefreshTokens.SingleOrDefault(rt => rt.Token == Token);
             if(!RT.IsActive)
             {
-                return APIResponse<string>.FailureResponse(new List<string> { "Token Is Expired" }, "Falied To LogOut");
+                return APIResponse<string>.FailureResponse(400, new List<string> { "Token Is Expired" }, "Falied To LogOut");
             }
             RT.RevokedOn = DateTime.UtcNow; 
 
@@ -232,10 +232,10 @@ namespace TourGuide.Services.AuthServices
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<string>.FailureResponse(errors, "Error While Updating User");
+                return APIResponse<string>.FailureResponse(400, errors, "Error While Updating User");
             }
 
-            return APIResponse<string>.SuccessResponse("User LogedOut Succesfully", "User LogedOut Succesfully");
+            return APIResponse<string>.SuccessResponse(200, "User LogedOut Succesfully", "User LogedOut Succesfully");
 
         }
 

@@ -1,5 +1,4 @@
 ﻿using ApplicationLayer.Contracts.Auth;
-using ApplicationLayer.Contracts.Repositories;
 using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.Contracts.UnitToWork;
 using ApplicationLayer.Services;
@@ -7,8 +6,6 @@ using InfrastructureLayer;
 using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using TourGuide.Services.AuthServices;
-using TourGuide.Services.CategoryService;
-using TourGuide.Services.TripService;
 
 namespace TourGuide.Extentions
 {
@@ -43,8 +40,7 @@ namespace TourGuide.Extentions
             Services.AddScoped<ITripServices, TripServices>();
 
 
-            Services.AddScoped<ICategoryRepository, CategoryService>();
-            Services.AddScoped<ITripRepository, TripService>();
+           
             Services.AddScoped<IAuthServices, AuthServices>();
             Services.AddScoped<IExternalAuthService, ExternalAuthService>();
 
