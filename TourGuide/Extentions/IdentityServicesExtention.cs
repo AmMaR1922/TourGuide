@@ -2,6 +2,7 @@
 using ApplicationLayer.Models;
 using DomainLayer.Entities;
 using InfrastructureLayer.Data.Context;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -50,6 +51,35 @@ namespace TourGuide.Extentions
 
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+
+            })
+               
+            .AddGoogle(o => {
+                var ClientId = configuration["Google:ClientId"];
+
+                if (ClientId is null)
+                {
+                    throw new ArgumentNullException(nameof(ClientId));
+                }
+
+                var ClientSecret = configuration["Google:ClientSecret"];
+               
+                if (ClientSecret is null)
+                {
+                    throw new ArgumentNullException(nameof(ClientSecret));
+                }
+
+                o.ClientId = ClientId;
+                o.ClientSecret = ClientSecret;
+                o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+
+
+
+
+
+
 
             })
             .AddJwtBearer(o =>

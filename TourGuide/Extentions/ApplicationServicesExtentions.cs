@@ -41,6 +41,7 @@ namespace TourGuide.Extentions
             Services.AddScoped<ICategoryRepository, CategoryService>();
             Services.AddScoped<ITripRepository, TripService>();
             Services.AddScoped<IAuthServices, AuthServices>();
+            Services.AddScoped<IExternalAuthService, ExternalAuthService>();
 
 
 
