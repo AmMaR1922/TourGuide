@@ -42,7 +42,7 @@ namespace TourGuide.Extentions
 
            
             Services.AddScoped<IAuthServices, AuthServices>();
-            Services.AddScoped<IExternalAuthService, ExternalAuthService>();
+          
 
 
 
