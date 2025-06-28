@@ -19,7 +19,7 @@ namespace TourGuide.Controllers.TripController
 
 
         [HttpPost("AddTrip")]
-        public async Task<IActionResult> AddTrip([FromBody] AddTripDto tripDto)
+        public async Task<IActionResult> AddTrip([FromBody]  AddTripDto tripDto)
         {
             if (tripDto == null)
             {
