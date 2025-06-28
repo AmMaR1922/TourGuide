@@ -40,6 +40,7 @@ namespace ApplicationLayer.Services
                     Category = trip.Category.Name,
                     Rating = trip.Rating,
                     IsBestSeller = trip.IsBestSeller,
+                    Reviews = trip.TripReviews.Count(),
                     MainImageURL = URLResolver.BuildFileUrl(trip.TripImages.Where(i => i.IsMainImage).Select(img => img.ImageURL).FirstOrDefault())
                 })
                 .ToListAsync();

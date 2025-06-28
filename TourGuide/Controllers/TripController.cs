@@ -111,7 +111,5 @@ namespace TourGuide.Controllers
         //        }
         //        return Ok(APIResponse<List<TripDtoResponse>>.SuccessResponse(response.Data, "Trips by rating retrieved successfully."));
         //    }
-
     }
-    
 }
