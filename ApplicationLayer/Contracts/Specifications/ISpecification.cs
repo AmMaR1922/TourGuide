@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using ApplicationLayer.Models;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace ApplicationLayer.Contracts.Specifications
     {
         Expression<Func<T, bool>>? Criteria { get; set; }
         List<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? Includes { get; }
-        Expression<Func<T, object>>? OrderByAsec { get; set; }
-        Expression<Func<T, object>>? OrderByDesc { get; set; }
+        //Expression<Func<T, object>>? OrderByAsec { get; set; }
+        //Expression<Func<T, object>>? OrderByDesc { get; set; }
+        List<OrderExpression<T>> orderExpressions { get; set; }
         int Skip { get; set; }
         int Take { get; set; }
         bool IsPaginated { get; set; }

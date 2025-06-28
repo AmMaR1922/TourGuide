@@ -16,6 +16,7 @@ namespace DomainLayer.Entities
         public bool IsAvailable { get; set; } = true;
         public DateTime DateTime { get; set; }
         public double Rating { get; set; } = 0.0;
+        public bool IsBestSeller { get; set; } = false;
         public MeetingPoint MeetingPoint { get; set; } = null!;
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
