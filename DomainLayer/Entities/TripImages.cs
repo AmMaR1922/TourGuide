@@ -10,6 +10,7 @@ namespace DomainLayer.Entities
     public class TripImages : BaseEntity
     {
         public string ImageURL { get; set; } = null!;
+        public bool IsMainImage { get; set; } = false;
         public int TripId { get; set; }
         public Trip Trip { get; set; } = null!;
     }
