@@ -42,7 +42,7 @@ namespace TourGuide.Controllers.AuthController
                 return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Login");
             }
             var result =await authServices.Login(userLoginDTO);
-            if (result.Succeeded)
+            if (result.Succeeded && result.Data!.RefreshToken is not null)
             {
                 SetRefreshTokeninCookie(result.Data!.RefreshToken, result.Data.RefreshTokenExperationDate);
             }
@@ -58,7 +58,7 @@ namespace TourGuide.Controllers.AuthController
                 return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Error While get Refresh Token" }, "Login Again For Security");
             }
             var result = await authServices.GetNewToken(RefreshToken);
-            if(result.Succeeded)
+            if(result.Succeeded && result.Data!.RefreshToken is not null)
             {
                 SetRefreshTokeninCookie(result.Data!.RefreshToken, result.Data.RefreshTokenExperationDate);
             }
