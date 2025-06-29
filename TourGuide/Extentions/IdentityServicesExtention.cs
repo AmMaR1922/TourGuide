@@ -1,12 +1,20 @@
 ﻿using ApplicationLayer.Models;
 using DomainLayer.Entities;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.PeopleService.v1;
+using Google.Apis.Services;
 using InfrastructureLayer.Data.Context;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace TourGuide.Extentions
@@ -45,20 +53,20 @@ namespace TourGuide.Extentions
                 .AddEntityFrameworkStores<TourGuideDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.ConfigureExternalCookie(options =>
-            {
-                options.Cookie.Name = "TourGuide.External";
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            });
-            services.ConfigureApplicationCookie(opts =>
-            {
-                opts.LoginPath = "/api/externalauth/google-redirect-login";
-                opts.Cookie.SameSite = SameSiteMode.None;
-                opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                opts.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-            });
+            //services.ConfigureExternalCookie(options =>
+            //{
+            //    options.Cookie.Name = "TourGuide.External";
+            //    options.Cookie.SameSite = SameSiteMode.None;
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //});
+            //services.ConfigureApplicationCookie(opts =>
+            //{
+            //    opts.LoginPath = "/api/externalauth/google-redirect-login";
+            //    opts.Cookie.SameSite = SameSiteMode.None;
+            //    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    opts.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+            //});
 
 
 
@@ -69,7 +77,7 @@ namespace TourGuide.Extentions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                //options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
             {
@@ -88,9 +96,7 @@ namespace TourGuide.Extentions
                     ClockSkew = TimeSpan.Zero
                 };
             })
-            // 2) Application cookie (if you sign in server-side)
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-            // 3) Google redirect flow → external cookie
+           
             .AddGoogle(GoogleDefaults.AuthenticationScheme, google =>
             {
                 google.ClientId = configuration["Google:ClientId"]
@@ -99,9 +105,33 @@ namespace TourGuide.Extentions
                     ?? throw new ArgumentNullException(nameof(configuration));
                 google.CallbackPath = "/signin-google";
                 google.SaveTokens = true;
+                google.UserInformationEndpoint =
+            "https://www.googleapis.com/oauth2/v2/userinfo";
+
+                google.Scope.Add("https://www.googleapis.com/auth/user.phonenumbers.read");
+                google.CorrelationCookie.SameSite = SameSiteMode.None;
+                google.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+
+
                 google.Scope.Add("openid");
                 google.Scope.Add("email");
                 google.Scope.Add("profile");
+
+              
+
+                google.ClaimActions.Clear();              // optional, if you want just email/name/picture
+                google.ClaimActions.MapJsonKey(
+                    claimType: ClaimTypes.NameIdentifier,  // maps Google’s “id” → ClaimTypes.NameIdentifier
+                    jsonKey: "id");
+                google.ClaimActions.MapJsonKey(
+                    claimType: ClaimTypes.Email,           // maps Google’s “email” → ClaimTypes.Email
+                    jsonKey: "email");
+                google.ClaimActions.MapJsonKey(
+                    claimType: "urn:google:picture",       // your custom claim type
+                    jsonKey: "picture");
+
+               
+
                 google.SignInScheme = IdentityConstants.ExternalScheme;
             });
 
