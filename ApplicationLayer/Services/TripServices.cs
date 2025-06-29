@@ -159,9 +159,19 @@ namespace ApplicationLayer.Services
 
         }
 
-        public Task<APIResponse<string>> Delete(int Id)
+        public async Task<APIResponse<string>> Delete(int Id)
         {
-            throw new NotImplementedException();
+            var Trip = await unitOfWork.Repository<Trip>().GetByIdAsync(Id);
+            if (Trip == null)
+                return APIResponse<string>.FailureResponse(500, null, "Trip not found.");
+
+            Trip.IsDeleted = true;
+            unitOfWork.Repository<Trip>().Update(Trip);
+            var result = await unitOfWork.CompleteAsync();
+
+            if (!result)
+                return APIResponse<string>.FailureResponse(500, null, "An error ocurred.");
+            return APIResponse<string>.SuccessResponse(200, null, "Trip deleted successfully.");
         }
 
         public Task<APIResponse<string>> Update(int Id, TripToBeUpdatedDTO TripDto)
