@@ -8,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 ApplicationServicesExtentions.AddApplicationServices(builder.Services, builder.Configuration);
 IdentityServicesExtention.AddIdentityServices(builder.Services, builder.Configuration);
 
+
+
 var app = builder.Build();
+app.UseCors("AllowAllOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -23,8 +26,9 @@ using (var service=app.Services.CreateScope())
 }
 
 app.UseStaticFiles();
+app.UseRouting();
 app.UseHttpsRedirection();
-    
+app.UseCookiePolicy();
 app.UseAuthentication(); 
 app.UseAuthorization();
 
