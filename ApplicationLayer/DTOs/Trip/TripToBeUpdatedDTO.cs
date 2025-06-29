@@ -12,7 +12,7 @@ namespace ApplicationLayer.DTOs.Trip
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DateTime { get; set; }
         public string MeetingPointAddress { get; set; } = null!;

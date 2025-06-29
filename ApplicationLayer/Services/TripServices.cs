@@ -58,7 +58,6 @@ namespace ApplicationLayer.Services
             var trip = await unitOfWork.Repository<Trip>().GetAll().Where(t => t.Id == Id)
                 .Select(T => new TripToBeReturnedDTO()
                 {
-
                     Name = T.Name,
                     Duration = T.Duration,
                     Description = T.Description,
@@ -176,96 +175,105 @@ namespace ApplicationLayer.Services
 
         public async Task<APIResponse<string>> Update(int Id, TripToBeUpdatedDTO TripDto)
         {
-            var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(Id);
-            if (trip == null)
-                return APIResponse<string>.FailureResponse(404, null, "Trip Not found.");
-
-            trip.Name = TripDto.Name;
-            trip.Description = TripDto.Description;
-            trip.Duration = TripDto.Duration;
-            trip.Price = TripDto.Price;
-            trip.IsAvailable = trip.IsAvailable;
-            trip.DateTime = TripDto.DateTime;
-            trip.MeetingPoint.Address = TripDto.MeetingPointAddress;
-            trip.MeetingPoint.URL = TripDto.MeetingPointURL;
-            trip.CategoryId = TripDto.CategoryId;
-
-            #region Activity
-            foreach (var tripActivity in trip.Activities)
+            bool result = false;
+            using (var transaction = await unitOfWork.BeginTransactionAsync())
             {
-                unitOfWork.Repository<TripActivities>().Delete(tripActivity);
-            }
+                var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(Id);
+                if (trip == null)
+                    return APIResponse<string>.FailureResponse(404, null, "Trip Not found.");
 
-            foreach (var activityId in TripDto.Activities)
-            {
-                var activity = await unitOfWork.Repository<Activity>().GetByIdAsync(activityId);
-                if (activity != null)
-                    trip.Activities.Add(new TripActivities { Activity = activity });
-            }
-            #endregion
+                trip.Name = TripDto.Name;
+                trip.Description = TripDto.Description;
+                trip.Duration = TripDto.Duration;
+                trip.Price = TripDto.Price;
+                trip.IsAvailable = TripDto.IsAvailable;
+                trip.DateTime = TripDto.DateTime;
+                trip.MeetingPoint.Address = TripDto.MeetingPointAddress;
+                trip.MeetingPoint.URL = TripDto.MeetingPointURL;
+                trip.CategoryId = TripDto.CategoryId;
 
-            #region Languages
-            foreach (var tripLanguage in trip.TripLanguages)
-            {
-                unitOfWork.Repository<TripLanguages>().Delete(tripLanguage);
-            }
+                #region Activity
+                //foreach (var tripActivity in trip.Activities)
+                //{
+                //    unitOfWork.Repository<TripActivities>().Delete(tripActivity);
+                //}
+                trip.Activities.Clear(); // Buld deletion 
 
-            foreach (var languageId in TripDto.Languages)
-            {
-                var language = await unitOfWork.Repository<Language>().GetByIdAsync(languageId);
-                if (language != null)
-                    trip.TripLanguages.Add(new TripLanguages { Language = language });
-            }
-            #endregion
-
-            #region Includes
-            foreach(var tripInclude in trip.TripIncludes)
-            {
-                unitOfWork.Repository<TripIncludes>().Delete(tripInclude);
-            }
-
-            foreach (var includeId in TripDto.Includes)
-            {
-                var include = await unitOfWork.Repository<Includes>().GetByIdAsync(includeId);
-                if (include != null)
-                    trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = true });
-            }
-            #endregion
-
-            #region NotInclude
-            foreach (var NotIncludeId in TripDto.Includes)
-            {
-                var include = await unitOfWork.Repository<Includes>().GetByIdAsync(NotIncludeId);
-                if (include != null)
-                    trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = false });
-            }
-            #endregion
-
-            #region Images
-            foreach (var image in trip.TripImages)
-            {
-                FileHandler.DeleteFile(image.ImageURL);
-                unitOfWork.Repository<TripImages>().Delete(image);
-            }
-
-            foreach (var image in TripDto.Images)
-            {
-                string url = await FileHandler.SaveFileAsync("TripImages", image);
-                if (url != null)
+                foreach (var activityId in TripDto.Activities)
                 {
-                    trip.TripImages.Add(new TripImages { ImageURL = url, IsMainImage = false });
+                    var activity = await unitOfWork.Repository<Activity>().GetByIdAsync(activityId);
+                    if (activity != null)
+                        trip.Activities.Add(new TripActivities { Activity = activity });
                 }
+                #endregion
+
+                #region Languages
+                //foreach (var tripLanguage in trip.TripLanguages)
+                //{
+                //    unitOfWork.Repository<TripLanguages>().Delete(tripLanguage);
+                //}
+                trip.TripLanguages.Clear();
+
+                foreach (var languageId in TripDto.Languages)
+                {
+                    var language = await unitOfWork.Repository<Language>().GetByIdAsync(languageId);
+                    if (language != null)
+                        trip.TripLanguages.Add(new TripLanguages { Language = language });
+                }
+                #endregion
+
+                #region Includes
+                //foreach(var tripInclude in trip.TripIncludes)
+                //{
+                //    unitOfWork.Repository<TripIncludes>().Delete(tripInclude);
+                //}
+                trip.TripIncludes.Clear();
+
+                foreach (var includeId in TripDto.Includes)
+                {
+                    var include = await unitOfWork.Repository<Includes>().GetByIdAsync(includeId);
+                    if (include != null)
+                        trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = true });
+                }
+                #endregion
+
+                #region NotInclude
+                foreach (var NotIncludeId in TripDto.Includes)
+                {
+                    var include = await unitOfWork.Repository<Includes>().GetByIdAsync(NotIncludeId);
+                    if (include != null)
+                        trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = false });
+                }
+                #endregion
+
+                #region Images
+                foreach (var image in trip.TripImages)
+                {
+                    FileHandler.DeleteFile(image.ImageURL);
+                }
+
+                trip.TripImages.Clear();
+
+                foreach (var image in TripDto.Images)
+                {
+                    string url = await FileHandler.SaveFileAsync("TripImages", image);
+                    if (url != null)
+                    {
+                        trip.TripImages.Add(new TripImages { ImageURL = url, IsMainImage = false });
+                    }
+                }
+                #endregion
+
+                trip.TripImages.Add(new TripImages()
+                {
+                    ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
+                    IsMainImage = true
+                });
+
+                unitOfWork.Repository<Trip>().Update(trip);
+                result = await unitOfWork.CompleteAsync();
             }
-            #endregion
 
-            trip.TripImages.Add(new TripImages()
-            {
-                ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
-                IsMainImage = true
-            });
-
-            unitOfWork.Repository<Trip>().Update(trip);
-            var result = await unitOfWork.CompleteAsync();
             if (!result)
                 return APIResponse<string>.FailureResponse(500, null, "An Error Occured.");
             return APIResponse<string>.SuccessResponse(200, null, "Trip Updated Successfully.");
