@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.Contracts.Auth;
 using ApplicationLayer.DTOs.ApplicationUser;
+using ApplicationLayer.Models;
 using DomainLayer.Entities;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
@@ -7,7 +8,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace TourGuide.Controllers.AuthController
 {
@@ -58,7 +62,7 @@ namespace TourGuide.Controllers.AuthController
 
             // 3) Find or create the user
             var user = await _userManager.FindByEmailAsync(email)
-                       ?? new ApplicationUser { Email = email, UserName = email };
+                       ?? new ApplicationUser { Email = email, UserName = email ,PasswordHash= "AQAAAAIAAYagAAAAEEZjPPwhrp1m31RsZIDYoHjL7r7FnmG8a1l3QKOHPglIEYEykqAXS27ST9+JesZIcA==", PhoneNumber="01282825288"};
             if (user.Id == 0)
                 await _userManager.CreateAsync(user);
 
@@ -74,7 +78,11 @@ namespace TourGuide.Controllers.AuthController
         }
 
 
-      
-       
+
+        
+
+
+
+
     }
 }
