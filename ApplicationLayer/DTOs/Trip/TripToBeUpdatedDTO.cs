@@ -18,6 +18,7 @@ namespace ApplicationLayer.DTOs.Trip
         public string MeetingPointAddress { get; set; } = null!;
         public string MeetingPointURL { get; set; } = null!;
         public int CategoryId { get; set; }
+        public IFormFile? MainImage { get; set; }
         public List<int> Activities { get; set; } = new List<int>();
         public List<int> Languages { get; set; } = new List<int>();
         public List<int> Includes { get; set; } = new List<int>();

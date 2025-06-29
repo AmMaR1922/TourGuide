@@ -18,7 +18,7 @@ namespace ApplicationLayer.DTOs.Trip
         public double Rating { get; set; } = 0.0;
         public bool IsBestSeller { get; set; } = false;
         public MeetingPoint MeetingPoint { get; set; } = null!;
-        public string Category { get; set; } = null!;
+        public int CategoryId { get; set; }
         public string MainImage { get; set; } = null!;
         public List<string> Activities { get; set; } = new List<string>();
         public List<string> Languages { get; set; } = new List<string>();
