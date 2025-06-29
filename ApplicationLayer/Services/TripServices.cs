@@ -88,69 +88,75 @@ namespace ApplicationLayer.Services
             if (TripExists)
                 return APIResponse<string>.FailureResponse(400, null, "Trip with the same name already exists.");
 
-            var Trip = new Trip()
+            bool result = false;
+
+            using (var transaction = await unitOfWork.BeginTransactionAsync())
             {
-                Name = TripDto.Name,
-                Duration = TripDto.Duration,
-                Description = TripDto.Description,
-                Price = TripDto.Price,
-                IsAvailable = TripDto.IsAvailable,
-                DateTime = TripDto.DateTime,
-                CategoryId = TripDto.CategoryId,
-                MeetingPoint = new MeetingPoint
+                var Trip = new Trip()
                 {
-                    Address = TripDto.MeetingPointAddress,
-                    URL = TripDto.MeetingPointURL
-                }
-            };
+                    Name = TripDto.Name,
+                    Duration = TripDto.Duration,
+                    Description = TripDto.Description,
+                    Price = TripDto.Price,
+                    IsAvailable = TripDto.IsAvailable,
+                    DateTime = TripDto.DateTime,
+                    CategoryId = TripDto.CategoryId,
+                    MeetingPoint = new MeetingPoint
+                    {
+                        Address = TripDto.MeetingPointAddress,
+                        URL = TripDto.MeetingPointURL
+                    }
+                };
 
-            foreach (var activityId in TripDto.Activities)
-            {
-                var activity = await unitOfWork.Repository<Activity>().GetByIdAsync(activityId);
-                if (activity != null)
-                    Trip.Activities.Add(new TripActivities { Activity = activity });
-            }
-
-            foreach (var languageId in TripDto.Languages)
-            {
-                var language = await unitOfWork.Repository<Language>().GetByIdAsync(languageId);
-                if (language != null)
-                    Trip.TripLanguages.Add(new TripLanguages { Language = language });
-            }
-
-            foreach (var includeId in TripDto.Includes)
-            {
-                var include = await unitOfWork.Repository<Includes>().GetByIdAsync(includeId);
-                if (include != null)
-                    Trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = true });
-            }
-
-            foreach (var notIncludeId in TripDto.NotIncludes)
-            {
-                var notInclude = await unitOfWork.Repository<Includes>().GetByIdAsync(notIncludeId);
-                if (notInclude != null)
-                    Trip.TripIncludes.Add(new TripIncludes { Includes = notInclude, IsIncluded = false });
-            }
-
-            foreach (var image in TripDto.Images)
-            {
-                if (image != null)
+                foreach (var activityId in TripDto.Activities)
                 {
-                    var imageUrl = await FileHandler.SaveFileAsync("TripImages", image);
-                    if (imageUrl is not null)
-                        Trip.TripImages.Add(new TripImages { ImageURL = imageUrl, IsMainImage = false });
+                    var activity = await unitOfWork.Repository<Activity>().GetByIdAsync(activityId);
+                    if (activity != null)
+                        Trip.Activities.Add(new TripActivities { Activity = activity });
                 }
+
+                foreach (var languageId in TripDto.Languages)
+                {
+                    var language = await unitOfWork.Repository<Language>().GetByIdAsync(languageId);
+                    if (language != null)
+                        Trip.TripLanguages.Add(new TripLanguages { Language = language });
+                }
+
+                foreach (var includeId in TripDto.Includes)
+                {
+                    var include = await unitOfWork.Repository<Includes>().GetByIdAsync(includeId);
+                    if (include != null)
+                        Trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = true });
+                }
+
+                foreach (var notIncludeId in TripDto.NotIncludes)
+                {
+                    var notInclude = await unitOfWork.Repository<Includes>().GetByIdAsync(notIncludeId);
+                    if (notInclude != null)
+                        Trip.TripIncludes.Add(new TripIncludes { Includes = notInclude, IsIncluded = false });
+                }
+
+                foreach (var image in TripDto.Images)
+                {
+                    if (image != null)
+                    {
+                        var imageUrl = await FileHandler.SaveFileAsync("TripImages", image);
+                        if (imageUrl is not null)
+                            Trip.TripImages.Add(new TripImages { ImageURL = imageUrl, IsMainImage = false });
+                    }
+                }
+
+                Trip.TripImages.Add(new TripImages()
+                {
+                    ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
+                    IsMainImage = true
+                });
+
+
+                await unitOfWork.Repository<Trip>().AddAsync(Trip);
+                result = await unitOfWork.CompleteAsync();
             }
 
-            Trip.TripImages.Add(new TripImages()
-            {
-                ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
-                IsMainImage = true
-            });
-
-
-            await unitOfWork.Repository<Trip>().AddAsync(Trip);
-            bool result = await unitOfWork.CompleteAsync();
             if (!result)
                 return APIResponse<string>.FailureResponse(500, null, "Failed to add trip.");
             
