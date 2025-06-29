@@ -17,6 +17,7 @@ namespace ApplicationLayer.DTOs.TripDtos
         public double Rating { get; set; }
         public bool IsBestSeller { get; set; }
         public string Category { get; set; } = null!;
+        public int Reviews { get; set; }
         public bool? IsAvailable { get; set; }
         public string? MainImageURL { get; set; }
     }
