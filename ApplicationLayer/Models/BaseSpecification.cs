@@ -37,7 +37,7 @@ namespace ApplicationLayer.Models
 
         public void AddInclude(Func<IQueryable<T>, IIncludableQueryable<T, object>> include)
         {
-            Includes.Add(include);
+            Includes!.Add(include);
         }
 
         public void AddOrderBy(Expression<Func<T, object>> orderBy, bool IsDescending = false)
