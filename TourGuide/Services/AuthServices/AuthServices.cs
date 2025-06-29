@@ -18,11 +18,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TourGuide.Services.AuthServices
 {
-    public class AuthServices(UserManager<ApplicationUser> usermanager , RoleManager<IdentityRole<int>> rolemanager , IOptions<JWT> options ) : IAuthServices
+    public class AuthServices(UserManager<ApplicationUser> usermanager , RoleManager<IdentityRole<int>> rolemanager , ITokenServices tokenServices) : IAuthServices
     {
         private readonly UserManager<ApplicationUser> UserManager = usermanager;
         private readonly RoleManager<IdentityRole<int>> RoleManager = rolemanager;
-        private readonly JWT jWT = options.Value;
+        private readonly ITokenServices TokenServices = tokenServices;
 
         public async Task<APIResponse<ApplicationUserResponseDTO>> GetNewToken(string RefreshToken)
         {
@@ -40,7 +40,7 @@ namespace TourGuide.Services.AuthServices
             }
             RT.RevokedOn = DateTime.UtcNow;
 
-            var NewRefreshToken = GetRefreshToken();
+            var NewRefreshToken = TokenServices.GetRefreshToken();
             user.RefreshTokens!.Add(NewRefreshToken);
             var result = await UserManager.UpdateAsync(user);
             if(!result.Succeeded)
@@ -54,7 +54,7 @@ namespace TourGuide.Services.AuthServices
             var ApplicationUserResponse = new ApplicationUserResponseDTO()
             {
                 Id = user.Id,
-                AccessToken =await GetAccessToken(user),
+                AccessToken = await TokenServices.GetAccessToken(user),
                 Email = user.Email!,
                 Role = (await UserManager.GetRolesAsync(user))[0],
                 UserName = user.UserName!,
@@ -114,7 +114,7 @@ namespace TourGuide.Services.AuthServices
                Id = user.Id,
                Email = user.Email!,
                Role = (await UserManager.GetRolesAsync(user))[0],
-               AccessToken = await GetAccessToken(user),
+               AccessToken = await TokenServices.GetAccessToken(user),
                UserName = user.UserName!
             
             };
@@ -127,7 +127,7 @@ namespace TourGuide.Services.AuthServices
             }
             else
             {
-                var RFT = GetRefreshToken();
+                var RFT = TokenServices.GetRefreshToken();
                 user.RefreshTokens!.Add(RFT);
                 var result= await UserManager.UpdateAsync(user);
                 if(!result.Succeeded)
@@ -139,7 +139,7 @@ namespace TourGuide.Services.AuthServices
                 ApplicationUserResponse.RefreshToken = RFT.Token;
 
             }
-            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(400, ApplicationUserResponse,"User Login Succesfully");
+            return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(200, ApplicationUserResponse,"User Login Succesfully");
 
 
         }
@@ -183,7 +183,7 @@ namespace TourGuide.Services.AuthServices
 
             }
           
-            var RefreshToken = GetRefreshToken();
+            var RefreshToken = TokenServices.GetRefreshToken();
             user.RefreshTokens!.Add(RefreshToken);
 
            result= await UserManager.UpdateAsync(user);
@@ -196,7 +196,7 @@ namespace TourGuide.Services.AuthServices
             var ApplicationUserResponse = new ApplicationUserResponseDTO()
             {
                 Id = user.Id,
-                AccessToken = await GetAccessToken(user),
+                AccessToken = await TokenServices.GetAccessToken(user),
                 Email = user.Email,
                 Role = "NormalUser",
                 UserName = user.UserName,
@@ -208,8 +208,6 @@ namespace TourGuide.Services.AuthServices
 
 
             return APIResponse<ApplicationUserResponseDTO>.SuccessResponse(200, ApplicationUserResponse, "User Added Succesfully");
-
-
 
 
         }
@@ -240,42 +238,7 @@ namespace TourGuide.Services.AuthServices
         }
 
 
-        private async Task<string> GetAccessToken(ApplicationUser User)
-        {
-            var AuthCliams = new List<Claim> { new Claim(ClaimTypes.Email, User.Email!) };
-
-            var roles = await UserManager.GetRolesAsync(User);
-            foreach(var role in roles)
-            {
-                AuthCliams.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var AuthKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jWT.Key));
-            var signingCred = new SigningCredentials(AuthKey, SecurityAlgorithms.HmacSha256);
-            var JwtSecurityToken = new JwtSecurityToken(
-                issuer:jWT.Issuer,
-                audience:jWT.Audience,
-                signingCredentials: signingCred,
-                claims:AuthCliams,
-                expires:DateTime.UtcNow.AddMinutes(jWT.DurationInMinutes)
-                
-                );
-            return new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
-           
-        }
-
-        private RefreshToken GetRefreshToken()
-        {
-            var refreshToken = new Byte[32];
-            using var Genrator = RandomNumberGenerator.Create();
-            Genrator.GetBytes(refreshToken);
-            return new RefreshToken()
-            {
-                CreatedOn = DateTime.UtcNow,
-                ExpireOn = DateTime.UtcNow.AddDays(30),
-                Token = Convert.ToBase64String(refreshToken)
-            };
-        }
+     
 
     }
 }
