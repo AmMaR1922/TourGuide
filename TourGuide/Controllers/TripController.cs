@@ -20,7 +20,7 @@ namespace TourGuide.Controllers
 
 
         [HttpPost("AddTrip")]
-        public async Task<ActionResult<APIResponse<string>>> AddTrip([FromBody] TripToBeAddedDTO tripDto)
+        public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
         {
             var response = await tripServices.Add(tripDto);
             return StatusCode(response.StatusCode, response);
@@ -41,7 +41,7 @@ namespace TourGuide.Controllers
         }
 
         [HttpPut("UpdateTrip/{Id}")]
-        public async Task<ActionResult<APIResponse<string>>> UpdateTrip([FromBody] TripToBeUpdatedDTO tripDto, int Id)
+        public async Task<ActionResult<APIResponse<string>>> UpdateTrip([FromForm] TripToBeUpdatedDTO tripDto, int Id)
         {
             var response = await tripServices.Update(Id, tripDto);
             return StatusCode(response.StatusCode, response);
