@@ -24,7 +24,7 @@ namespace InfrastructureLayer
                     query = include(query);
                 }
 
-                //query = specification.Includes.Aggregate(query, (currentquery, include) => include(currentquery));
+        
             }
 
             //if (specification.OrderByAsec != null)

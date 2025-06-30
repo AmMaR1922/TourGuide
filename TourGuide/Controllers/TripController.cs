@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationLayer.Contracts.Services;
+using ApplicationLayer.DTOs.Trip;
+using ApplicationLayer.DTOs.TripDtos;
+using ApplicationLayer.Models;
+using ApplicationLayer.QueryParams;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TourGuide.Controllers
 {
@@ -6,110 +11,48 @@ namespace TourGuide.Controllers
     [ApiController]
     public class TripController : ControllerBase
     {
-        //    public ITripRepository TripRepository { get; }
-        //    public TripController(ITripRepository tripRepository)
-        //    {
-        //        TripRepository = tripRepository;
-        //    }
+        private readonly ITripServices tripServices;
+
+        public TripController(ITripServices tripServices)
+        {
+            this.tripServices = tripServices;
+        }
 
 
-        //    [HttpPost("AddTrip")]
-        //    public async Task<IActionResult> AddTrip([FromBody] AddTripDto tripDto)
-        //    {
-        //        if (tripDto == null)
-        //        {
-        //            return BadRequest("Trip data cannot be null.");
-        //        }
-        //        var response = await TripRepository.AddTrip(tripDto);
-        //        if (!response.Succeeded)
-        //        {
-        //            return BadRequest(response.Errors);
-        //        }
-        //        if (tripDto.Languages.Any(string.IsNullOrWhiteSpace))
-        //        {
-        //            return BadRequest("Language codes cannot be null or empty.");
-        //        }
-        //        return Ok(APIResponse<AddTripDto>.SuccessResponse(response.Data, "Trip Added successfully."));
-        //    }
+        [HttpPost("AddTrip")]
+        public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
+        {
+            var response = await tripServices.Add(tripDto);
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //    [HttpGet("GetAllTrips")]
-        //    public async Task<IActionResult> GetAllTrips([FromQuery] TripSpecParams Params)
-        //    {
-        //        var response = await TripRepository.GetAllTrips(Params);
-        //        if (!response.Succeeded)
-        //        {
-        //            return BadRequest(response.Errors);
-        //        }
-        //        return Ok(APIResponse<List<TripDtoResponse>>.SuccessResponse(response.Data, "Trips retrieved successfully."));
-        //    }
+        [HttpGet("GetAllTrips")]
+        public async Task<ActionResult<APIResponse<Pagination<TripDTOResponse>>>> GetAllTrips([FromQuery] TripSpecParams Params)
+        {
+            var response = await tripServices.GetAll(Params);
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //    [HttpGet("GetTripById/{Id}")]
-        //    public async Task<IActionResult> GetTripById(int Id)
-        //    {
-        //        var response = await TripRepository.GetTripById(Id);
-        //        if (!response.Succeeded)
-        //        {
-        //            return NotFound(response.Errors);
-        //        }
-        //        return Ok(APIResponse<TripDtoResponse>.SuccessResponse(response.Data, "Trip retrieved successfully."));
-        //    }
+        [HttpGet("GetTripById/{Id}")]
+        public async Task<ActionResult<APIResponse<TripToBeReturnedDTO>>> GetTripById(int Id)
+        {
+            var response = await tripServices.GetById(Id);
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //    [HttpPut("UpdateTrip/{Id}")]
-        //    public async Task<IActionResult> UpdateTrip([FromBody] UpdateTripDto tripDto, int Id)
-        //    {
-        //        if (tripDto == null)
-        //        {
-        //            return BadRequest("Trip data cannot be null.");
-        //        }
-        //        var response = await TripRepository.UpdateTrip(tripDto, Id);
-        //        if (!response.Succeeded)
-        //        {
-        //            return BadRequest(response.Errors);
-        //        }
-        //        return Ok(APIResponse<UpdateTripDto>.SuccessResponse(response.Data, "Trip updated successfully."));
-        //    }
+        [HttpPut("UpdateTrip/{Id}")]
+        public async Task<ActionResult<APIResponse<string>>> UpdateTrip([FromForm] TripToBeUpdatedDTO tripDto, int Id)
+        {
+            var response = await tripServices.Update(Id, tripDto);
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //    [HttpDelete("DeleteTrip/{Id}")]
-        //    public async Task<IActionResult> DeleteTrip(int Id)
-        //    {
-        //        var response = await TripRepository.DeleteTrip(Id);
-        //        if (!response.Succeeded)
-        //        {
-        //            return NotFound(response.Errors);
-        //        }
-        //        return Ok(APIResponse<TripDtoResponse>.SuccessResponse(response.Data, "Trip deleted successfully."));
-        //    }
+        [HttpDelete("DeleteTrip/{Id}")]
+        public async Task<ActionResult<string>> DeleteTrip(int Id)
+        {
+            var response = await tripServices.Delete(Id);
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //    [HttpGet("GetTripsByCategoryId/{categoryId}")]
-        //    public async Task<IActionResult> GetTripsByCategoryId(int categoryId)
-        //    {
-        //        var response = await TripRepository.GetTripsByCategoryId(categoryId);
-        //        if (!response.Succeeded)
-        //        {
-        //            return NotFound(response.Errors);
-        //        }
-        //        return Ok(APIResponse<List<TripDtoResponse>>.SuccessResponse(response.Data, "Trips by category ID retrieved successfully."));
-        //    }
-
-        //    [HttpGet("GetTripsByCategoryName/{categoryName}")]
-        //    public async Task<IActionResult> GetTripsByCategoryName(string categoryName)
-        //    {
-        //        var response = await TripRepository.GetTripsByCategoryName(categoryName);
-        //        if (!response.Succeeded)
-        //        {
-        //            return NotFound(response.Errors);
-        //        }
-        //        return Ok(APIResponse<List<TripDtoResponse>>.SuccessResponse(response.Data, "Trips by category name retrieved successfully."));
-        //    }
-        //    [HttpGet("GetTripsByRating/{rating}")]
-        //    public async Task<IActionResult> GetTripsByRating(double rating)
-        //    {
-        //        var response = await TripRepository.GetTripsByRating(rating);
-        //        if (!response.Succeeded)
-        //        {
-        //            return NotFound(response.Errors);
-        //        }
-        //        return Ok(APIResponse<List<TripDtoResponse>>.SuccessResponse(response.Data, "Trips by rating retrieved successfully."));
-        //    }
     }
 }
