@@ -61,11 +61,34 @@ namespace TourGuide.Controllers.AuthController
             if (!result.Succeeded) return Unauthorized();
 
             var response = await _externalAuthService.HandelCallBack(result);
+            if(response.Succeeded && response.Data.RefreshToken is not null)
+            {
+                SetCookie(response.Data.RefreshToken, response.Data.RefreshTokenExperationDate);
+            }
+
+          
             return response;
 
 
 
             
+        }
+
+
+
+        [ApiExplorerSettings(IgnoreApi =true)]
+        private void SetCookie(string RefreshToken , DateTime ExpireOn)
+        {
+            var options = new CookieOptions()
+            {
+                Expires=ExpireOn,
+                HttpOnly = true,
+                Secure = true,
+                
+            };
+
+            Response.Cookies.Append("RefreshToken", RefreshToken, options);
+
         }
 
 

@@ -13,8 +13,8 @@ namespace InfrastructureLayer.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.Property(e => e.PasswordHash)
-              .IsRequired();
+            //builder.Property(e => e.PasswordHash)
+            //  .IsRequired();
 
             builder.Property(e => e.Email)
               .IsRequired();
@@ -24,8 +24,8 @@ namespace InfrastructureLayer.Data.Configuration
                 .IsUnique();
              
 
-            builder.Property(e => e.PhoneNumber)
-              .IsRequired();
+            //builder.Property(e => e.PhoneNumber)
+            //  .IsRequired();
 
             builder.Property(e => e.UserName)
               .IsRequired();
