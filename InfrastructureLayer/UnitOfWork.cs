@@ -17,7 +17,6 @@ namespace InfrastructureLayer
         private readonly TourGuideDbContext DbContext;
         private Dictionary<Type, object> Repositories;
 
-
         public UnitOfWork(TourGuideDbContext DbContext)
         {
             this.DbContext = DbContext;
@@ -43,7 +42,5 @@ namespace InfrastructureLayer
 
             return (IGenericRepository<T>)Repositories[Name];
         }
-
-        
     }
 }
