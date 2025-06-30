@@ -108,7 +108,7 @@ namespace TourGuide.Extentions
                 google.UserInformationEndpoint =
             "https://www.googleapis.com/oauth2/v2/userinfo";
 
-                google.Scope.Add("https://www.googleapis.com/auth/user.phonenumbers.read");
+                
                 google.CorrelationCookie.SameSite = SameSiteMode.None;
                 google.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
 
@@ -126,9 +126,7 @@ namespace TourGuide.Extentions
                 google.ClaimActions.MapJsonKey(
                     claimType: ClaimTypes.Email,           // maps Google’s “email” → ClaimTypes.Email
                     jsonKey: "email");
-                google.ClaimActions.MapJsonKey(
-                    claimType: "urn:google:picture",       // your custom claim type
-                    jsonKey: "picture");
+               
 
                
 
