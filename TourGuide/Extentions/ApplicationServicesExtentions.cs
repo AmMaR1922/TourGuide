@@ -38,9 +38,12 @@ namespace TourGuide.Extentions
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
             Services.AddScoped<ICategoryServices, CategoryServices>();
             Services.AddScoped<ITripServices, TripServices>();
+            Services.AddScoped<IExternalAuthService, ExternalAuthServices>();
+            Services.AddScoped<ITokenServices, TokenServices>();
 
 
-           
+
+
             Services.AddScoped<IAuthServices, AuthServices>();
           
 
