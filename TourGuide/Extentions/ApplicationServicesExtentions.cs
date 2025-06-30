@@ -38,6 +38,7 @@ namespace TourGuide.Extentions
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
             Services.AddScoped<ICategoryServices, CategoryServices>();
             Services.AddScoped<ITripServices, TripServices>();
+            Services.AddScoped<IActivityServices, ActivityServices>();
 
 
            
