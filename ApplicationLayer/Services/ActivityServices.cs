@@ -48,6 +48,7 @@ namespace ApplicationLayer.Services
                 Name = activity.Name,
             }, "Activity Retrieved Successfully.");
         }
+        
         public async Task<APIResponse<string>> Add(ActivityToBeAddedDTO ActivityDto)
         {
             var activityExists = unitOfWork.Repository<Activity>().GetAll().Any(a => a.Name == ActivityDto.Name);
