@@ -12,12 +12,12 @@ namespace DomainLayer.Entities
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         public bool IsAvailable { get; set; } = true;
         public DateTime DateTime { get; set; }
         public double Rating { get; set; } = 0.0;
         public bool IsBestSeller { get; set; } = false;
-        public MeetingPoint MeetingPoint { get; set; } = null!;
+        public MeetingPoint MeetingPoint { get; set; } = new MeetingPoint();
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public ICollection<TripActivities> Activities { get; set; } = new List<TripActivities>();

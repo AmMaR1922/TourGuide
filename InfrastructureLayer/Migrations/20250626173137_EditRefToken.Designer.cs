@@ -4,6 +4,7 @@ using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfrastructureLayer.Migrations
 {
     [DbContext(typeof(TourGuideDbContext))]
-    partial class TourGuideDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250626173137_EditRefToken")]
+    partial class EditRefToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,9 +269,6 @@ namespace InfrastructureLayer.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsBestSeller")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -276,9 +276,9 @@ namespace InfrastructureLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
+                    b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
-                        .HasColumnType("float(10)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
@@ -321,9 +321,6 @@ namespace InfrastructureLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMainImage")
                         .HasColumnType("bit");
 
                     b.Property<int>("TripId")
@@ -556,9 +553,6 @@ namespace InfrastructureLayer.Migrations
                                 .HasColumnType("datetime2");
 
                             b1.Property<DateTime>("ExpireOn")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime?>("RevokedOn")
                                 .HasColumnType("datetime2");
 
                             b1.Property<string>("Token")

@@ -23,7 +23,7 @@ namespace TourGuide.Controllers
         public async Task<ActionResult<APIResponse<string>>> AddCategory([FromBody] CategoryToBeAddedDTO categoryDto)
         {
             var response = await categoryServices.Add(categoryDto);
-            return Ok(response);
+            return StatusCode(response.StatusCode,response);
         }
 
 
@@ -31,28 +31,28 @@ namespace TourGuide.Controllers
         public async Task<ActionResult<APIResponse<Pagination<CategoryDTOResponse>>>> GetAllCategories([FromQuery] SpecParams Params)
         {
             var response = await categoryServices.GetAll(Params);
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("GetCategoryById/{Id}")]
         public async Task<ActionResult<APIResponse<CategoryDTOResponse>>> GetCategoryById(int Id)
         {
             var response = await categoryServices.GetById(Id);
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("UpdateCategory/{Id}")]
         public async Task<ActionResult<APIResponse<string>>> UpdateCategory(int Id, [FromBody] CategoryToBeUpdatedDTO categoryDto)
         {
             var response = await categoryServices.Update(Id, categoryDto);
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("DeleteCategory/{Id}")]
         public async Task<ActionResult<APIResponse<string>>> DeleteCategory(int Id)
         {
             var response = await categoryServices.Delete(Id);
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
     }
