@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationLayer.DTOs.TripDtos
 {
@@ -13,7 +14,8 @@ namespace ApplicationLayer.DTOs.TripDtos
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
+        [Range(0, double.MaxValue)]
+        public double Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DateTime { get; set; }
         public string MeetingPointAddress { get; set; } = null!;
