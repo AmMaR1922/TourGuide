@@ -76,6 +76,7 @@ namespace TourGuide.Services.AuthServices
                     {
                         Email = Email,
                         UserName = UserName,
+                        EmailConfirmed =true
                     };
 
 
