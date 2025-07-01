@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Your Email</title>
+    <!-- Ensure mobile scaling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="Margin:0;padding:0;background-color:#f2f2f2;">
+    <!-- Preheader Text : hidden in body -->
+    <div style="display:none;font-size:1px;color:#f2f2f2;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+        Confirm your Tour Guide account—just one click away!
+    </div>
+
+    <!-- Container -->
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding:20px 0;">
+                <!-- Inner 600px box -->
+                <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+
+                    <!-- Header with logo -->
+                    <tr>
+                        <td align="center" style="padding:20px;background:#004080;">
+                            <img src="https://yourcdn.com/logo.png"
+                                 width="120" height="auto"
+                                 alt="Tour Guide Logo"
+                                 style="display:block;border:0;outline:none;text-decoration:none;">
+                        </td>
+                    </tr>
+
+                    <!-- Hero / greeting -->
+                    <tr>
+                        <td style="padding:30px 40px 20px 40px;font-family:sans-serif;font-size:16px;line-height:24px;color:#333333;">
+                            <h1 style="Margin:0;font-size:24px;font-weight:normal;color:#004080;">
+                                Welcome to Tour Guide!
+                            </h1>
+                            <p style="Margin:16px 0 0 0;">
+                                Hi <strong>{{UserName}}</strong>,<br>
+                                Thanks for signing up. Please confirm your email address to activate your account.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Call to action button -->
+                    <tr>
+                        <td align="center" style="padding:0 40px 40px 40px;">
+                            <a href="{{ConfirmationLink}}"
+                               style="
+                   display:inline-block;
+                   text-decoration:none;
+                   background-color:#007ACC;
+                   color:#ffffff;
+                   padding:12px 24px;
+                   border-radius:4px;
+                   font-family:sans-serif;
+                   font-size:16px;
+                   line-height:20px;
+                   font-weight:bold;
+                 ">
+                                Confirm Email
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Fallback text -->
+                    <tr>
+                        <td style="padding:0 40px 30px 40px;font-family:sans-serif;font-size:14px;line-height:20px;color:#777777;">
+                            <p style="Margin:0;">
+                                If that button doesn’t work, copy and paste the following link into your browser:
+                            </p>
+                            <p style="word-break:break-all;Margin:8px 0 0 0;">
+                                <a href="{{ConfirmationLink}}" style="color:#007ACC;">{{ConfirmationLink}}</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background:#f2f2f2;padding:20px 40px;font-family:sans-serif;font-size:12px;line-height:18px;color:#999999;">
+                            <p style="Margin:0;">Tour Guide Inc., 123 Explorer Way, Adventure City</p>
+                            <p style="Margin:4px 0 0 0;">
+                               
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
