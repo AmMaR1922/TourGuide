@@ -1,11 +1,13 @@
 ﻿using ApplicationLayer.Contracts.Auth;
 using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.Contracts.UnitToWork;
+using ApplicationLayer.Models;
 using ApplicationLayer.Services;
 using InfrastructureLayer;
 using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using TourGuide.Services.AuthServices;
+using TourGuide.Services.EmailServices;
 
 namespace TourGuide.Extentions
 {
@@ -47,6 +49,10 @@ namespace TourGuide.Extentions
             Services.AddScoped<IExternalAuthService, ExternalAuthServices>();
             Services.AddScoped<ITokenServices, TokenServices>();
             Services.AddScoped<IAuthServices, AuthServices>();
+
+            Services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+            Services.AddTransient<IMailingService, MailingServices>();
 
 
 
