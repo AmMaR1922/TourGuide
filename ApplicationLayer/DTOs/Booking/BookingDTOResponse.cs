@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs
+namespace ApplicationLayer.DTOs.Booking
 {
     public class BookingDTOResponse
     {
