@@ -40,7 +40,7 @@ namespace TourGuide.Extentions
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 #endregion
 
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
 
                 #region Tokens

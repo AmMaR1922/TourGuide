@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.DTOs.ApplicationUser;
 using ApplicationLayer.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace ApplicationLayer.Contracts.Auth
 {
     public interface IAuthServices
     {
-        Task<APIResponse<ApplicationUserResponseDTO>> Register(ApplicationUserRegisterDTO appuser);
-        Task<APIResponse<ApplicationUserResponseDTO>> Login(ApplicationUserLoginDTO appuser);
+        Task<APIResponse<string>> Register(ApplicationUserRegisterDTO appuser , HttpRequest request);
+        Task<APIResponse<ApplicationUserResponseDTO>> Login(ApplicationUserLoginDTO appuser , HttpRequest request);
 
         Task<APIResponse<ApplicationUserResponseDTO>> GetNewToken(string RefreshToken);
         Task<APIResponse<string>> RevokeRefreshToken(string Token);
