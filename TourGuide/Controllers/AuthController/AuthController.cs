@@ -1,37 +1,58 @@
 ﻿using ApplicationLayer.Contracts.Auth;
 using ApplicationLayer.DTOs.ApplicationUser;
 using ApplicationLayer.Models;
+using DomainLayer.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations.Rules;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Formats.Asn1;
 
 namespace TourGuide.Controllers.AuthController
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthServices auth) : ControllerBase
+    public class AuthController(IAuthServices auth , UserManager<ApplicationUser> userManager) : ControllerBase
     {
         private readonly IAuthServices authServices =auth;
+        private readonly UserManager<ApplicationUser> UserManager = userManager;
 
         [HttpPost("Register")]
-        public async Task<ActionResult<APIResponse<ApplicationUserResponseDTO>>> Register([FromBody]ApplicationUserRegisterDTO registerDTO)
+        public async Task<ActionResult<APIResponse<string>>> Register([FromBody]ApplicationUserRegisterDTO registerDTO)
         {
             if(!ModelState.IsValid)
             {
                 var errors=ModelState.Values.SelectMany(e => e.Errors).Select(e=>e.ErrorMessage).ToList();
-                return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Add User");
+                return APIResponse<string>.FailureResponse(400, errors, "Failed To Add User");
             }
-            var result = await authServices.Register(registerDTO);
+            var result = await authServices.Register(registerDTO , Request);
 
-            if(result.Succeeded && result.Data!.RefreshToken is not null)
-            {
-                SetRefreshTokeninCookie(result.Data.RefreshToken, result.Data.RefreshTokenExperationDate);
-            }
+            //if(result.Succeeded && result.Data!.RefreshToken is not null)
+            //{
+            //    SetRefreshTokeninCookie(result.Data.RefreshToken, result.Data.RefreshTokenExperationDate);
+            //}
             return result;
             
         }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if(user is null)
+            {
+                return BadRequest("Invalid User Id");
+            }
+            var result = await UserManager.ConfirmEmailAsync(user, token);
+            if(!result.Succeeded)
+            {
+                return BadRequest("Token Expired");
+            }
+            return Ok("Email Confirmed");
+        }
+       
 
         [HttpPost("Login")]
         public async Task<ActionResult<APIResponse<ApplicationUserResponseDTO>>>Login([FromBody]ApplicationUserLoginDTO userLoginDTO)
@@ -41,10 +62,10 @@ namespace TourGuide.Controllers.AuthController
                 var errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
                 return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, errors, "Failed To Login");
             }
-            var result =await authServices.Login(userLoginDTO);
-            if (result.Succeeded && result.Data!.RefreshToken is not null)
+            var result =await authServices.Login(userLoginDTO,Request);
+            if (result.Succeeded && result.Data?.RefreshToken is not null)
             {
-                SetRefreshTokeninCookie(result.Data!.RefreshToken, result.Data.RefreshTokenExperationDate);
+                SetRefreshTokeninCookie(result.Data.RefreshToken, result.Data.RefreshTokenExperationDate);
             }
             return result;
         }
