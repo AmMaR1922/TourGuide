@@ -28,22 +28,22 @@ namespace ApplicationLayer.Specifications.BookingsSpecifications
             {
                 switch (Params.Sort.ToLower())
                 {
-                    case "tripdateasec":
+                    case "tripdate:asc":
                         AddOrderBy(b => b.TripDate);
                         break;
-                    case "tripdatedesc":
+                    case "tripdate:desc":
                         AddOrderBy(b => b.TripDate, true);
                         break;
-                    case "createdatasec":
+                    case "createdat:asc":
                         AddOrderBy(b => b.CreatedAt);
                         break;
-                    case "createdatdesc":
+                    case "createdat:desc":
                         AddOrderBy(b => b.CreatedAt, true);
                         break;
-                    case "statusasec":
+                    case "status:asc":
                         AddOrderBy(b => b.Status);
                         break;
-                    case "statusdesc":
+                    case "status:desc":
                         AddOrderBy(b => b.Status, true);
                         break;
                     default:
@@ -55,6 +55,8 @@ namespace ApplicationLayer.Specifications.BookingsSpecifications
             {
                 AddOrderBy(b => b.CreatedAt, true);
             }
+
+            IsPaginated = true;
 
             ApplyPagination((Params.PageNumber - 1 * Params.PageSize), Params.PageSize);
         }

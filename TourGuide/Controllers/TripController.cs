@@ -21,7 +21,8 @@ namespace TourGuide.Controllers
         [HttpGet("GetAllTrips")]
         public async Task<ActionResult<APIResponse<Pagination<TripDTOResponse>>>> GetAllTrips([FromQuery] TripSpecParams Params)
         {
-            var response = await tripServices.GetAll(Params);
+            var isAdmin = User.IsInRole("Admin");
+            var response = await tripServices.GetAll(Params, isAdmin);
             return StatusCode(response.StatusCode, response);
         }
 

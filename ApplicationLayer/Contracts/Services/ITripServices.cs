@@ -13,7 +13,7 @@ namespace ApplicationLayer.Contracts.Services
 {
     public interface ITripServices
     {
-        Task<APIResponse<Pagination<TripDTOResponse>>> GetAll(TripSpecParams Params);
+        Task<APIResponse<Pagination<TripDTOResponse>>> GetAll(TripSpecParams Params, bool isAdmin);
         Task<APIResponse<TripToBeReturnedDTO>> GetById(int Id);
         Task<APIResponse<string>> Add(TripToBeAddedDTO TripDto);
         Task<APIResponse<string>> Delete(int Id);

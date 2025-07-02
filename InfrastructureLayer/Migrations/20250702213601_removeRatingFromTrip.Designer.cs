@@ -4,6 +4,7 @@ using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfrastructureLayer.Migrations
 {
     [DbContext(typeof(TourGuideDbContext))]
-    partial class TourGuideDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702213601_removeRatingFromTrip")]
+    partial class removeRatingFromTrip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Activities", (string)null);
+                    b.ToTable("Activities");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.ApplicationUser", b =>
@@ -159,7 +162,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Category", b =>
@@ -182,7 +185,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Includes", b =>
@@ -205,7 +208,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Includes", (string)null);
+                    b.ToTable("Includes");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Language", b =>
@@ -232,7 +235,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Trip", b =>
@@ -282,7 +285,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Trips", (string)null);
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.TripActivities", b =>
@@ -297,7 +300,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("TripActivities", (string)null);
+                    b.ToTable("TripActivities");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.TripImages", b =>
@@ -328,7 +331,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("TripId");
 
-                    b.ToTable("TripImages", (string)null);
+                    b.ToTable("TripImages");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.TripIncludes", b =>
@@ -346,7 +349,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("IncludesId");
 
-                    b.ToTable("TripIncludes", (string)null);
+                    b.ToTable("TripIncludes");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.TripLanguages", b =>
@@ -361,7 +364,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("TripLanguages", (string)null);
+                    b.ToTable("TripLanguages");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.TripReviews", b =>
@@ -383,7 +386,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TripReviews", (string)null);
+                    b.ToTable("TripReviews");
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Wishlist", b =>
@@ -398,7 +401,7 @@ namespace InfrastructureLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlists", (string)null);
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -536,7 +539,7 @@ namespace InfrastructureLayer.Migrations
 
             modelBuilder.Entity("DomainLayer.Entities.ApplicationUser", b =>
                 {
-                    b.OwnsMany("DomainLayer.Entities.ApplicationUser.RefreshTokens#DomainLayer.Entities.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("DomainLayer.Entities.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<int>("ApplicationUserId")
                                 .HasColumnType("int");
@@ -562,7 +565,7 @@ namespace InfrastructureLayer.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("RefreshToken", (string)null);
+                            b1.ToTable("RefreshToken");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
@@ -598,7 +601,7 @@ namespace InfrastructureLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("DomainLayer.Entities.Trip.MeetingPoint#DomainLayer.Entities.MeetingPoint", "MeetingPoint", b1 =>
+                    b.OwnsOne("DomainLayer.Entities.MeetingPoint", "MeetingPoint", b1 =>
                         {
                             b1.Property<int>("TripId")
                                 .HasColumnType("int");
@@ -613,7 +616,7 @@ namespace InfrastructureLayer.Migrations
 
                             b1.HasKey("TripId");
 
-                            b1.ToTable("Trips", (string)null);
+                            b1.ToTable("Trips");
 
                             b1.WithOwner()
                                 .HasForeignKey("TripId");

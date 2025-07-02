@@ -14,5 +14,7 @@ namespace DomainLayer.Entities
         public Trip Trip { get; set; } = null!;
         public int UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
