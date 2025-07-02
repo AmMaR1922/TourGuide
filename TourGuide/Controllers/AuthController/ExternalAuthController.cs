@@ -62,7 +62,7 @@ namespace TourGuide.Controllers.AuthController
             return response;
         }
 
-        [ApiExplorerSettings(IgnoreApi =true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         private void SetCookie(string RefreshToken , DateTime ExpireOn)
         {
             var options = new CookieOptions()
