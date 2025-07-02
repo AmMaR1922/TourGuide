@@ -36,12 +36,9 @@ namespace TourGuide.Controllers.AuthController
             _externalAuthService = externalAuthService;
         }
 
-       
-      
         [HttpGet("google-redirect-login")]
         public IActionResult GoogleLoginRedirect()
         {
-           
             var props = new AuthenticationProperties
             {
                 RedirectUri = Url.Action(nameof(GoogleCallback))
@@ -49,14 +46,11 @@ namespace TourGuide.Controllers.AuthController
              return Challenge(
              new AuthenticationProperties { RedirectUri = Url.Action("GoogleCallback") },
              GoogleDefaults.AuthenticationScheme);
-            ;
         }
-
         
         [HttpGet("GoogleCallback")]
         public async Task<ActionResult<APIResponse<ApplicationUserResponseDTO>>> GoogleCallback()
         {
-            
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
             if (!result.Succeeded) return Unauthorized();
 
@@ -65,16 +59,8 @@ namespace TourGuide.Controllers.AuthController
             {
                 SetCookie(response.Data.RefreshToken, response.Data.RefreshTokenExperationDate);
             }
-
-          
             return response;
-
-
-
-            
         }
-
-
 
         [ApiExplorerSettings(IgnoreApi =true)]
         private void SetCookie(string RefreshToken , DateTime ExpireOn)
@@ -84,19 +70,10 @@ namespace TourGuide.Controllers.AuthController
                 Expires=ExpireOn,
                 HttpOnly = true,
                 Secure = true,
-                
             };
 
             Response.Cookies.Append("RefreshToken", RefreshToken, options);
 
         }
-
-
-
-        
-
-
-
-
     }
 }
