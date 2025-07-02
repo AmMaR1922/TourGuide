@@ -23,9 +23,10 @@ namespace TourGuide.Controllers.AuthController
         }
 
         [HttpGet("GetReviews")]
-        public async Task<APIResponse<List<TripReviews>>> GetAllReviews(ReviewsSpecParams Params)
+        public async Task<ActionResult<APIResponse<List<TripReviews>>>> GetAllReviews(ReviewsSpecParams Params)
         {
-            
+            var response = await reviewsServices.GetAll(Params);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("AddReview")]
