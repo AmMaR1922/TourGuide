@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs.Activity
+namespace ApplicationLayer.DTOs.Includes
 {
-    public class ActivityToBeUpdatedDTO
+    public class IncludesDTORequest
     {
         public string Name { get; set; } = null!;
     }

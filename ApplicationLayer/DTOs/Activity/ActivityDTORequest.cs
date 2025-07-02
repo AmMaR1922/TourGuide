@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs.CategoryDto
+namespace ApplicationLayer.DTOs.Activity
 {
-    public class CategoryToBeUpdatedDTO
+    public class ActivityDTORequest
     {
         public string Name { get; set; } = null!;
     }

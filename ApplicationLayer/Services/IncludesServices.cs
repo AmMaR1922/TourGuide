@@ -48,7 +48,7 @@ namespace ApplicationLayer.Services
             }, "Include Retrieved Successfully.");
         }
         
-        public async Task<APIResponse<string>> Add(IncludesToBeAddedDTO IncludeDto)
+        public async Task<APIResponse<string>> Add(IncludesDTORequest IncludeDto)
         {
             var IncludeExists = unitOfWork.Repository<Includes>().GetAll().Any(a => a.Name == IncludeDto.Name);
 
@@ -71,7 +71,7 @@ namespace ApplicationLayer.Services
             if (include == null)
                 return APIResponse<string>.FailureResponse(404, null, "Include not found.");
 
-            include.IsDeleted = true;
+            unitOfWork.Repository<Includes>().Delete(include);
             var result = await unitOfWork.CompleteAsync();
 
             if (!result)
@@ -80,7 +80,7 @@ namespace ApplicationLayer.Services
             return APIResponse<string>.SuccessResponse(200, null, "Include deleted successfully.");
         }
 
-        public async Task<APIResponse<string>> Update(int Id, IncludesToBeUpdatedDTO ActivityDto)
+        public async Task<APIResponse<string>> Update(int Id, IncludesDTORequest ActivityDto)
         {
             var Include = await unitOfWork.Repository<Includes>().GetByIdAsync(Id);
 

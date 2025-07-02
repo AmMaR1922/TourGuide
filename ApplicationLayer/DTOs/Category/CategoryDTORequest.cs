@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.CategoryDto
 {
-    public class CategoryToBeAddedDTO
+    public class CategoryDTORequest
     {
-          public string Name { get; set; } = null!;
+        public string Name { get; set; } = null!;
     }
 }
