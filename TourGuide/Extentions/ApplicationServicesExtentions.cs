@@ -30,20 +30,19 @@ namespace TourGuide.Extentions
                 // Add Swagger doc
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Jenny Project API",
+                    Title = "Tour Guide API",
                     Version = "v1",
-                    Description = "API for Real Estate, Construction, and User Management",
+                    Description = "API for Trips",
                     Contact = new OpenApiContact
                     {
-                        Name = "Jenny Team",
-                        Email = "support@jennyproject.com"
+                        Name = "ToureGuide Team",
+                        Email = "support@TourGuideproject.com"
                     }
                 });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
-                    //Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     In = ParameterLocation.Header,
                     Description = "Enter only your JWT token (e.g., abc123). 'Bearer' prefix is added automatically."
@@ -66,7 +65,7 @@ namespace TourGuide.Extentions
         }
     });
 
-                // Group by controller
+                
                 options.TagActionsBy(api => new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] });
             });
             #endregion
