@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TourGuide.Controllers.AuthController
+namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -33,7 +33,7 @@ namespace TourGuide.Controllers.AuthController
         [Authorize]
         [HttpPost("AddReview")]
         public async Task<APIResponse<string>> AddReview([FromBody] ReviewDTORequest reviewDTORequest)
-        { 
+        {
             var user = await userManager.GetUserAsync(User);
 
             var response = await reviewsServices.Add(reviewDTORequest, user);
