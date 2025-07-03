@@ -3,12 +3,14 @@ using ApplicationLayer.DTOs.Trip;
 using ApplicationLayer.DTOs.TripDtos;
 using ApplicationLayer.Models;
 using ApplicationLayer.QueryParams;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class TripController : ControllerBase
     {
         private readonly ITripServices tripServices;
@@ -33,6 +35,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddTrip")]
         public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
         {
@@ -40,6 +43,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateTrip/{Id}")]
         public async Task<ActionResult<APIResponse<string>>> UpdateTrip([FromForm] TripToBeUpdatedDTO tripDto, int Id)
         {
@@ -47,12 +51,12 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteTrip/{Id}")]
         public async Task<ActionResult<string>> DeleteTrip(int Id)
         {
             var response = await tripServices.Delete(Id);
             return StatusCode(response.StatusCode, response);
         }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.DTOs.Includes;
 using ApplicationLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,8 @@ namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
+
     public class IncludesController : ControllerBase
     {
         private readonly IIncludesServices includesServices;

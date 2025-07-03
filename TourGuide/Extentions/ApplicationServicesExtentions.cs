@@ -43,6 +43,7 @@ namespace TourGuide.Extentions
             Services.AddScoped<IActivityServices, ActivityServices>();
             Services.AddScoped<IIncludesServices, IncludesServices>();
             Services.AddScoped<ILanguageServices, LanguageServices>();
+            Services.AddScoped<IReviewsServices, ReviewsServices>();
 
 
 
