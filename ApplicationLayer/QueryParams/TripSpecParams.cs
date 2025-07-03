@@ -13,5 +13,6 @@ namespace ApplicationLayer.QueryParams
         public int? LanguageId { get; set; }
         public bool? IsBestSeller { get; set; }
         public bool? IsTopRated { get; set; }
+        public bool? IsAvailable { get; set; } = true;
     }
 }

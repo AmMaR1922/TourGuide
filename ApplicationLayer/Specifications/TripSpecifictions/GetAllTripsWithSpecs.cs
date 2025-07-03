@@ -11,13 +11,15 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
 {
     public class GetAllTripsWithSpecs : BaseSpecification<Trip>
     {
-        public GetAllTripsWithSpecs(TripSpecParams Params)
+        public GetAllTripsWithSpecs(TripSpecParams Params, bool isAdmin)
         {
-            Criteria = trip => 
+            Criteria = trip =>
                 (Params.CategoryId == null || trip.CategoryId == Params.CategoryId) &&
                 (Params.LanguageId == null || trip.TripLanguages.Any(tl => tl.LanguageId == Params.LanguageId)) &&
                 (Params.IsBestSeller == null || trip.IsBestSeller == Params.IsBestSeller) &&
-                (Params.IsTopRated == null || trip.TripReviews.Average(r => r.Rating) >= 4);
+                (Params.IsTopRated == null || trip.TripReviews.Average(r => r.Rating) >= 4) &&
+                (isAdmin || trip.IsAvailable == true);
+                
 
             int seed = DateTime.Today.GetHashCode();
             var rand = new Random(seed);
