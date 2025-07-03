@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ProtectedFiles\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\ProfilesPictures\" />
   </ItemGroup>
