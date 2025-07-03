@@ -4,6 +4,7 @@ using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfrastructureLayer.Migrations
 {
     [DbContext(typeof(TourGuideDbContext))]
-    partial class TourGuideDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702225518_AddProfilePicture")]
+    partial class AddProfilePicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,6 +284,9 @@ namespace InfrastructureLayer.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("float(10)");
 
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -378,9 +384,6 @@ namespace InfrastructureLayer.Migrations
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");

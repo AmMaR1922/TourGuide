@@ -1,5 +1,7 @@
+using ApplicationLayer.Helper;
 using InfrastructureLayer.Data.Context;
 using InfrastructureLayer.Data.Seeding;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TourGuide.Extentions;
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 ApplicationServicesExtentions.AddApplicationServices(builder.Services, builder.Configuration);
 IdentityServicesExtention.AddIdentityServices(builder.Services, builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+
+
 
 
 
@@ -37,6 +42,8 @@ if (app.Environment.IsDevelopment())
 using (var service=app.Services.CreateScope())
 {
    await IdentitySeeding.IdentitySeedingOperation(service.ServiceProvider);
+    URLResolver.Init(service.ServiceProvider.GetRequiredService<IHttpContextAccessor>());
+
 }
 
 app.UseStaticFiles();

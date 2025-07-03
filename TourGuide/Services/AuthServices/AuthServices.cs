@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Contracts.Auth;
 using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.DTOs.ApplicationUser;
+using ApplicationLayer.Helper;
 using ApplicationLayer.Models;
 using DomainLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -128,7 +129,9 @@ namespace TourGuide.Services.AuthServices
                Email = user.Email!,
                Role = (await UserManager.GetRolesAsync(user))[0],
                AccessToken = await TokenServices.GetAccessToken(user),
-               UserName = user.UserName!
+               UserName = user.UserName!,
+               ProfilePictureURL = URLResolver.BuildFileUrl(user.ProfilePictureURL)
+               
             
             };
 
@@ -169,12 +172,15 @@ namespace TourGuide.Services.AuthServices
                 return APIResponse<string>.FailureResponse(400, new List<string> { "UserName Is Duplicated Change Email Please" }, "Failed To Add User");
             }
 
-           
 
-            var user = new ApplicationUser() { 
-            Email = appuser.Email,
-            PhoneNumber = appuser.PhoneNumber,
-            UserName = UserName
+
+            var user = new ApplicationUser()
+            {
+                Email = appuser.Email,
+                PhoneNumber = appuser.PhoneNumber,
+                UserName = UserName,
+                ProfilePictureURL = await FileHandler.SaveFileAsync("ProfilesPictures", appuser.ProfilePicture)
+
             };
 
            var result= await UserManager.CreateAsync(user, appuser.Password);

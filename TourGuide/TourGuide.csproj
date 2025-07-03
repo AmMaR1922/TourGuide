@@ -25,4 +25,10 @@
     <ProjectReference Include="..\InfrastructureLayer\InfrastructureLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProtectedFiles\" />
+    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\ProfilesPictures\" />
+  </ItemGroup>
+
 </Project>

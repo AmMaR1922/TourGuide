@@ -10,21 +10,34 @@ namespace ApplicationLayer.Helper
 {
     public static class FileHandler
     {
-        public static async Task<string?> SaveFileAsync(string FolderName, IFormFile File)
+        public static async Task<string?> SaveFileAsync(string FolderName, IFormFile? File)
         {
 
             if (File is null || File.Length == 0)
             {
                 return null;
             }
+            var extention = Path.GetExtension(File.FileName);
+            if(extention != ".png" && extention != ".jpg" && extention != ".jpeg")
+            {
+                return null;
+            }
+            await using var stream = File.OpenReadStream();
+            if (!await ValidateByMagicNumberAsync(stream))
+            {
+                return null;
+            }
             var FileName = FileNameConstructor(File.FileName);
-            var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "ProtectedFiles", FolderName, FileName);
+            var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", FolderName);
 
-            var directoryPath = Path.GetDirectoryName(FilePath);
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
+            if (!Directory.Exists(FilePath))
+                Directory.CreateDirectory(FilePath);
 
-            using (var FS = new FileStream(FilePath, FileMode.Create))
+            FilePath = Path.Combine(FilePath, FileName);
+
+
+
+            using (var FS = new FileStream(FilePath, FileMode.Create,FileAccess.Write,FileShare.None,4096,useAsync:true))
             {
                 await File.CopyToAsync(FS);
             }
@@ -38,7 +51,7 @@ namespace ApplicationLayer.Helper
             {
                 return false;
             }
-            var FullFilePath = Path.Combine(Directory.GetCurrentDirectory(), "ProtectedFiles", FilePath);
+            var FullFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", FilePath);
 
             if (File.Exists(FullFilePath))
             {
@@ -58,6 +71,29 @@ namespace ApplicationLayer.Helper
 
             else { return false; }
 
+        }
+
+        private static async Task<bool> ValidateByMagicNumberAsync(Stream stream)
+        {
+            
+            byte[] header = new byte[8];
+            int bytesRead = await stream.ReadAsync(header, 0, header.Length);
+            stream.Seek(0, SeekOrigin.Begin); 
+
+           
+            if (bytesRead >= 8 &&
+                header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47)
+            {
+                return true;
+            }
+            if (bytesRead >= 3 &&
+                header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF)
+            {
+                return true;
+            }
+
+            return false;
+           
         }
 
         private static string FileNameConstructor(string FileName)

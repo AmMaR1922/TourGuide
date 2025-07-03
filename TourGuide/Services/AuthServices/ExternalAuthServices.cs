@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TourGuide.Services.AuthServices
@@ -21,6 +22,9 @@ namespace TourGuide.Services.AuthServices
         {
             var Email = result.Principal?.FindFirstValue(ClaimTypes.Email);
             var Sub = result.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+           
+
+
             if (Email is null || Sub is null)
             {
                 return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Error While Signin With Google" }, "Failed To Login or SignUp");
@@ -36,6 +40,7 @@ namespace TourGuide.Services.AuthServices
                     Id = IfLoginExited.Id,
                     Email = IfLoginExited.Email!,
                     Role = (await UserManager.GetRolesAsync(IfLoginExited)).FirstOrDefault()??"Normal User",
+                    ProfilePictureURL = IfLoginExited.ProfilePictureURL,
                     AccessToken = await tokenServices.GetAccessToken(IfLoginExited),
                     UserName = IfLoginExited.UserName!
 
@@ -71,12 +76,31 @@ namespace TourGuide.Services.AuthServices
 
                 if(user is null)
                 {
+                    var UrlPic = result.Principal?.FindFirstValue("urn:google:picture");
+
+
+                    if (!string.IsNullOrEmpty(UrlPic))
+                    {
+
+                        UrlPic = UrlPic.Replace("=s100", "=s500");
+
+
+                        UrlPic = Regex.Replace(
+                            UrlPic,
+                            @"=s\d+(-c)?$",
+                            "=s500$1",
+                            RegexOptions.IgnoreCase
+                        );
+                    }
+
                     var UserName = Email.Substring(0,Email.IndexOf('@'));
                     var NewUser = new ApplicationUser()
                     {
                         Email = Email,
                         UserName = UserName,
-                        EmailConfirmed =true
+                        EmailConfirmed =true,
+                        ProfilePictureURL=UrlPic
+                        
                     };
 
 
@@ -107,6 +131,7 @@ namespace TourGuide.Services.AuthServices
                          Id=NewUser.Id,
                          Email=NewUser.Email,
                          UserName = NewUser.UserName,
+                         ProfilePictureURL=NewUser.ProfilePictureURL,
                          Role = (await UserManager.GetRolesAsync(NewUser)).FirstOrDefault()??"Role",
                          AccessToken = await tokenServices.GetAccessToken(NewUser),
                          RefreshToken = RT.Token,
@@ -149,6 +174,7 @@ namespace TourGuide.Services.AuthServices
                         AccessToken = await tokenServices.GetAccessToken(user),
                         Email = user.Email,
                         UserName = user.UserName,
+                        ProfilePictureURL = user.ProfilePictureURL,
                         Role  = (await UserManager.GetRolesAsync(user)).FirstOrDefault()??"Role",
                         
                     };
