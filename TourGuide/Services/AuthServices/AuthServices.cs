@@ -179,7 +179,8 @@ namespace TourGuide.Services.AuthServices
                 Email = appuser.Email,
                 PhoneNumber = appuser.PhoneNumber,
                 UserName = UserName,
-                ProfilePictureURL = await FileHandler.SaveFileAsync("ProfilesPictures", appuser.ProfilePicture)
+                ProfilePictureURL = await FileHandler.SaveFileAsync("ProfilesPictures", appuser.ProfilePicture),
+                FullName = appuser.FullName
 
             };
 
@@ -284,9 +285,8 @@ namespace TourGuide.Services.AuthServices
                      $"&token={Uri.EscapeDataString(EmailConfirmationToken)}";
 
             var template = await File.ReadAllTextAsync(
-                Path.Combine(_env.ContentRootPath,
-                                 "Services",
-                             "EmailServices",
+                Path.Combine(Directory.GetCurrentDirectory(),
+                              
                              "EmailTemplates", 
                              "EmailConfirmation.html"));
 

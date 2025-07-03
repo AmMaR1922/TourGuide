@@ -29,7 +29,7 @@ namespace TourGuide.Services.AuthServices
             {
                 return APIResponse<ApplicationUserResponseDTO>.FailureResponse(400, new List<string> { "Error While Signin With Google" }, "Failed To Login or SignUp");
             }
-            var IfLoginExited = await UserManager.FindByLoginAsync("Google", Sub);
+            var IfLoginExited = await UserManager.FindByLoginAsync("GOOGLE", Sub);
 
            
 
@@ -93,13 +93,17 @@ namespace TourGuide.Services.AuthServices
                         );
                     }
 
+                    var fullname = result.Principal?.FindFirstValue(ClaimTypes.Name);
+
                     var UserName = Email.Substring(0,Email.IndexOf('@'));
                     var NewUser = new ApplicationUser()
                     {
                         Email = Email,
                         UserName = UserName,
                         EmailConfirmed =true,
-                        ProfilePictureURL=UrlPic
+                        ProfilePictureURL=UrlPic,
+                        FullName = fullname??UserName
+                        
                         
                     };
 
