@@ -53,7 +53,7 @@ namespace TourGuide.Controllers
         }
 
         [HttpGet("GetAllBookings")]
-        public async Task<ActionResult<APIResponse<List<BookingDTOResponse>>>> GetAllBookings([FromQuery] BookingSpecParams bookingSpecParams)
+        public async Task<ActionResult<APIResponse<Pagination<BookingDTOResponse>>>> GetAllBookings([FromQuery] BookingSpecParams bookingSpecParams)
         {
             var user = await userManager.GetUserAsync(User);
 
