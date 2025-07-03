@@ -30,7 +30,7 @@ namespace TourGuide.Extentions
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 8;
                 #endregion
 
@@ -53,20 +53,7 @@ namespace TourGuide.Extentions
                 .AddEntityFrameworkStores<TourGuideDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.ConfigureExternalCookie(options =>
-            //{
-            //    options.Cookie.Name = "TourGuide.External";
-            //    options.Cookie.SameSite = SameSiteMode.None;
-            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //});
-            //services.ConfigureApplicationCookie(opts =>
-            //{
-            //    opts.LoginPath = "/api/externalauth/google-redirect-login";
-            //    opts.Cookie.SameSite = SameSiteMode.None;
-            //    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //    opts.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-            //});
+            
 
 
 
@@ -77,7 +64,6 @@ namespace TourGuide.Extentions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                
-                //options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
             {
@@ -117,7 +103,14 @@ namespace TourGuide.Extentions
                 google.Scope.Add("email");
                 google.Scope.Add("profile");
 
+                google.ClaimActions.MapJsonKey(
+                  claimType: ClaimTypes.Name,   
+                   jsonKey: "name"            
+                   );
               
+               
+
+
 
                 google.ClaimActions.Clear();              
                 google.ClaimActions.MapJsonKey(
