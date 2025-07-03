@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs.CategoryDto
+namespace ApplicationLayer.DTOs.Wishlist
 {
-    public class CategoryToBeAddedDTO
+    public class WishlistDTOResponse
     {
-          public string Name { get; set; } = null!;
+        public int TripId { get; set; }
     }
 }

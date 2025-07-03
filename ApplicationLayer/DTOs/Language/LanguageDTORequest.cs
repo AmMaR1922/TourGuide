@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs.Activity
+namespace ApplicationLayer.DTOs.Language
 {
-    public class ActivityToBeUpdatedDTO
+    public class LanguageDTORequest
     {
+        public string Code { get; set; } = null!;
         public string Name { get; set; } = null!;
     }
 }

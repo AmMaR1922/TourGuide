@@ -84,10 +84,9 @@ namespace TourGuide.Controllers.AuthController
                 SetRefreshTokeninCookie(result.Data!.RefreshToken, result.Data.RefreshTokenExperationDate);
             }
           
-
             return result;
-
         }
+
         [HttpPost("LogOut")]
         public async Task<ActionResult<APIResponse<string>>> LogOut([FromBody] RefreshTokenDTO ? RefreshToken)
         {
@@ -105,9 +104,7 @@ namespace TourGuide.Controllers.AuthController
         }
 
 
-
-
-        [ApiExplorerSettings(IgnoreApi =true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         private void SetRefreshTokeninCookie(string RefreshToken, DateTime Expire)
         {
             var CookieOptions = new CookieOptions()
@@ -115,7 +112,6 @@ namespace TourGuide.Controllers.AuthController
                 Expires = Expire,
                 Secure = true,
                 HttpOnly = true
-
             };
 
             Response.Cookies.Append("RefreshToken", RefreshToken, CookieOptions);

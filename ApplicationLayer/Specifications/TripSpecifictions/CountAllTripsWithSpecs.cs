@@ -17,7 +17,7 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                 (Params.CategoryId == null || trip.CategoryId == Params.CategoryId) &&
                 (Params.LanguageId == null || trip.TripLanguages.Any(tl => tl.LanguageId == Params.LanguageId)) &&
                 (Params.IsBestSeller == null || trip.IsBestSeller == Params.IsBestSeller) &&
-                (Params.IsTopRated == null || trip.Rating >= 4);
+                (Params.IsTopRated == null || trip.TripReviews.Average(r => r.Rating) >= 4);
         }
         
     }

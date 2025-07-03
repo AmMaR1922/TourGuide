@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.Activity
 {
-    public class ActivityToBeAddedDTO
+    public class ActivityDTORequest
     {
         public string Name { get; set; } = null!;
     }

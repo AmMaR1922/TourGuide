@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.Includes
 {
-    public class IncludesToBeUpdatedDTO
+    public class IncludesDTORequest
     {
         public string Name { get; set; } = null!;
     }

@@ -14,9 +14,9 @@ namespace ApplicationLayer.Contracts.Services
     {
         Task<APIResponse<Pagination<CategoryDTOResponse>>> GetAll(SpecParams Params);
         Task<APIResponse<CategoryDTOResponse>> GetById(int Id);
-        Task<APIResponse<string>> Add(CategoryToBeAddedDTO CategoryDto);
+        Task<APIResponse<string>> Add(CategoryDTORequest CategoryDto);
         Task<APIResponse<string>> Delete(int Id);
-        Task<APIResponse<string>> Update(int Id, CategoryToBeUpdatedDTO CategoryDto);
+        Task<APIResponse<string>> Update(int Id, CategoryDTORequest CategoryDto);
 
     }
 }

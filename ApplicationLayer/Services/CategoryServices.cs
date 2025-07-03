@@ -24,7 +24,7 @@ namespace ApplicationLayer.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<string>> Add(CategoryToBeAddedDTO CategoryDto)
+        public async Task<APIResponse<string>> Add(CategoryDTORequest CategoryDto)
         {
             bool catergoryExists = await unitOfWork.Repository<Category>().GetAll().AnyAsync(c => c.Name == CategoryDto.Name);
 
@@ -107,7 +107,7 @@ namespace ApplicationLayer.Services
             return APIResponse<CategoryDTOResponse>.SuccessResponse(200, categoryDto, "Category retrieved successfully.");
         }
 
-        public async Task<APIResponse<string>> Update(int Id, CategoryToBeUpdatedDTO CategoryDto)
+        public async Task<APIResponse<string>> Update(int Id, CategoryDTORequest CategoryDto)
         {
             var category = await unitOfWork.Repository<Category>().GetByIdAsync(Id);
 

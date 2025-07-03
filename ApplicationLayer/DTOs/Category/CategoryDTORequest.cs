@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationLayer.DTOs.CategoryDto
 {
-    public class CategoryToBeUpdatedDTO
+    public class CategoryDTORequest
     {
         public string Name { get; set; } = null!;
     }

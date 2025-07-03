@@ -15,5 +15,6 @@ namespace DomainLayer.Entities
         public int UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

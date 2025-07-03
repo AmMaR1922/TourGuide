@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationLayer.DTOs.Includes
+namespace ApplicationLayer.DTOs.Language
 {
-    public class IncludesToBeAddedDTO
+    public class LanguageDTOResponse
     {
+        public int Id { get; set; }
+        public string Code { get; set; } = null!;
         public string Name { get; set; } = null!;
     }
 }

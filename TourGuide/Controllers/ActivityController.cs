@@ -32,14 +32,14 @@ namespace TourGuide.Controllers
         }
 
         [HttpPost("AddActivity")]
-        public async Task<ActionResult<APIResponse<string>>> AddActivity([FromBody] ActivityToBeAddedDTO activityDto)
+        public async Task<ActionResult<APIResponse<string>>> AddActivity([FromBody] ActivityDTORequest activityDto)
         {
             var response = await activityServices.Add(activityDto);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("UpdateActivity/{id}")]
-        public async Task<ActionResult<APIResponse<string>>> UpdateActivity(int id, [FromBody] ActivityToBeUpdatedDTO activityDto)
+        public async Task<ActionResult<APIResponse<string>>> UpdateActivity(int id, [FromBody] ActivityDTORequest activityDto)
         {
             var response = await activityServices.Update(id, activityDto);
             return StatusCode(response.StatusCode, response);

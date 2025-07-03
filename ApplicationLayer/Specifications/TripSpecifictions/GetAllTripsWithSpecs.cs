@@ -17,7 +17,10 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                 (Params.CategoryId == null || trip.CategoryId == Params.CategoryId) &&
                 (Params.LanguageId == null || trip.TripLanguages.Any(tl => tl.LanguageId == Params.LanguageId)) &&
                 (Params.IsBestSeller == null || trip.IsBestSeller == Params.IsBestSeller) &&
-                (Params.IsTopRated == null || trip.Rating >= 4);
+                (Params.IsTopRated == null || trip.TripReviews.Average(r => r.Rating) >= 4);
+
+            int seed = DateTime.Today.GetHashCode();
+            var rand = new Random(seed);
 
             if (Params.Sort != null && Params.Sort.Any())
             {
@@ -25,32 +28,32 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                 {
                     switch (order.ToLower())
                         {
-                        case "priceasec":
+                        case "price:asc":
                             AddOrderBy(trip => trip.Price);
                             break;
-                        case "pricedesc":
+                        case "price:desc":
                             AddOrderBy(trip => trip.Price, true);
                             break;
-                        case "ratingasec":
-                            AddOrderBy(trip => trip.Rating);
+                        case "rating:asc":
+                            AddOrderBy(trip => trip.TripReviews.Average(r => r.Rating));
                             break;
-                        case "datetimeasec":
+                        case "date:asc":
                             AddOrderBy(trip => trip.DateTime);
                             break;
-                        case "datetimedesc":
+                        case "date:desc":
                             AddOrderBy(trip => trip.DateTime, true);
                             break;
                         case "bestseller":
                             AddOrderBy(trip => trip.IsBestSeller, true);
                             break;
-                        case "nameasec":
+                        case "name:asc":
                             AddOrderBy(trip => trip.Name);
                             break;
-                        case "namedesc":
+                        case "name:desc":
                             AddOrderBy(trip => trip.Name, true);
                             break;
                         default:
-                            AddOrderBy(trip => Guid.NewGuid());
+                            AddOrderBy(_ => rand.Next());
                             break;
                     }
                 }

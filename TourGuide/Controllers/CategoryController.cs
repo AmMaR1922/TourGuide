@@ -19,14 +19,6 @@ namespace TourGuide.Controllers
             this.categoryServices = categoryServices;
         }
 
-        [HttpPost("AddCategory")]
-        public async Task<ActionResult<APIResponse<string>>> AddCategory([FromBody] CategoryToBeAddedDTO categoryDto)
-        {
-            var response = await categoryServices.Add(categoryDto);
-            return StatusCode(response.StatusCode,response);
-        }
-
-
         [HttpGet("GetAllCategories")]
         public async Task<ActionResult<APIResponse<Pagination<CategoryDTOResponse>>>> GetAllCategories([FromQuery] SpecParams Params)
         {
@@ -41,8 +33,15 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPost("AddCategory")]
+        public async Task<ActionResult<APIResponse<string>>> AddCategory([FromBody] CategoryDTORequest categoryDto)
+        {
+            var response = await categoryServices.Add(categoryDto);
+            return StatusCode(response.StatusCode,response);
+        }
+
         [HttpPut("UpdateCategory/{Id}")]
-        public async Task<ActionResult<APIResponse<string>>> UpdateCategory(int Id, [FromBody] CategoryToBeUpdatedDTO categoryDto)
+        public async Task<ActionResult<APIResponse<string>>> UpdateCategory(int Id, [FromBody] CategoryDTORequest categoryDto)
         {
             var response = await categoryServices.Update(Id, categoryDto);
             return StatusCode(response.StatusCode, response);

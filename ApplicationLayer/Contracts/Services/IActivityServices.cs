@@ -13,8 +13,8 @@ namespace ApplicationLayer.Contracts.Services
     {
         Task<APIResponse<List<ActivityDTOResponse>>> GetAll();
         Task<APIResponse<ActivityDTOResponse>> GetById(int Id);
-        Task<APIResponse<string>> Add(ActivityToBeAddedDTO ActivityDto);
+        Task<APIResponse<string>> Add(ActivityDTORequest ActivityDto);
         Task<APIResponse<string>> Delete(int Id);
-        Task<APIResponse<string>> Update(int Id, ActivityToBeUpdatedDTO ActivityDto);
+        Task<APIResponse<string>> Update(int Id, ActivityDTORequest ActivityDto);
     }
 }

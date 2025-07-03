@@ -49,7 +49,7 @@ namespace ApplicationLayer.Services
             }, "Activity Retrieved Successfully.");
         }
         
-        public async Task<APIResponse<string>> Add(ActivityToBeAddedDTO ActivityDto)
+        public async Task<APIResponse<string>> Add(ActivityDTORequest ActivityDto)
         {
             var activityExists = unitOfWork.Repository<Activity>().GetAll().Any(a => a.Name == ActivityDto.Name);
 
@@ -72,7 +72,7 @@ namespace ApplicationLayer.Services
             if (activity == null)
                 return APIResponse<string>.FailureResponse(404, null, "Activity not found.");
 
-            activity.IsDeleted = true;
+            unitOfWork.Repository<Activity>().Delete(activity);
             var result = await unitOfWork.CompleteAsync();
 
             if (!result)
@@ -81,7 +81,7 @@ namespace ApplicationLayer.Services
             return APIResponse<string>.SuccessResponse(200, null, "Activity deleted successfully.");
         }
 
-        public async Task<APIResponse<string>> Update(int Id, ActivityToBeUpdatedDTO ActivityDto)
+        public async Task<APIResponse<string>> Update(int Id, ActivityDTORequest ActivityDto)
         {
             var activity = await unitOfWork.Repository<Activity>().GetByIdAsync(Id);
 

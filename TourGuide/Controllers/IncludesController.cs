@@ -32,14 +32,14 @@ namespace TourGuide.Controllers
         }
 
         [HttpPost("AddInclude")]
-        public async Task<ActionResult<APIResponse<string>>> AddInclude([FromBody] IncludesToBeAddedDTO includesDto)
+        public async Task<ActionResult<APIResponse<string>>> AddInclude([FromBody] IncludesDTORequest includesDto)
         {
             var response = await includesServices.Add(includesDto);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("UpdateInclude/{id}")]
-        public async Task<ActionResult<APIResponse<string>>> UpdateInclude(int id, [FromBody] IncludesToBeUpdatedDTO includesDto)
+        public async Task<ActionResult<APIResponse<string>>> UpdateInclude(int id, [FromBody] IncludesDTORequest includesDto)
         {
             var response = await includesServices.Update(id, includesDto);
             return StatusCode(response.StatusCode, response);

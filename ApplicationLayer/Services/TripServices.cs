@@ -25,7 +25,7 @@ namespace ApplicationLayer.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<Pagination<TripDTOResponse>>> GetAll(TripSpecParams Params)
+        public async Task<APIResponse<Pagination<TripDTOResponse>>> GetAll(TripSpecParams Params, bool isAdmin)
         {
             var Specs = new GetAllTripsWithSpecs(Params);
             var Trips = await unitOfWork.Repository<Trip>().GetAllWithSpecification(Specs)
@@ -35,10 +35,10 @@ namespace ApplicationLayer.Services
                     Name = trip.Name,
                     Duration = trip.Duration,
                     Price = trip.Price,
-                    IsAvailable = trip.IsAvailable, // ternary operator based on user Role
+                    IsAvailable = isAdmin ? trip.IsAvailable : null,
                     DateTime = trip.DateTime,
                     Category = trip.Category.Name,
-                    Rating = trip.Rating,
+                    Rating = trip.TripReviews.Average(r => r.Rating),
                     IsBestSeller = trip.IsBestSeller,
                     Reviews = trip.TripReviews.Count(),
                     MainImageURL = URLResolver.BuildFileUrl(trip.TripImages.Where(i => i.IsMainImage).Select(img => img.ImageURL).FirstOrDefault())
@@ -64,7 +64,7 @@ namespace ApplicationLayer.Services
                     Price = T.Price,
                     IsAvailable = T.IsAvailable,
                     DateTime = T.DateTime,
-                    Rating = T.Rating,
+                    Rating = T.TripReviews.Average(r => r.Rating),
                     IsBestSeller = T.IsBestSeller,
                     CategoryId = T.CategoryId,
                     MeetingPoint = T.MeetingPoint,

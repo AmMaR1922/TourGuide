@@ -12,8 +12,8 @@ namespace ApplicationLayer.Contracts.Services
     {
         Task<APIResponse<List<IncludesDTOResponse>>> GetAll();
         Task<APIResponse<IncludesDTOResponse>> GetById(int Id);
-        Task<APIResponse<string>> Add(IncludesToBeAddedDTO ActivityDto);
+        Task<APIResponse<string>> Add(IncludesDTORequest ActivityDto);
         Task<APIResponse<string>> Delete(int Id);
-        Task<APIResponse<string>> Update(int Id, IncludesToBeUpdatedDTO ActivityDto);
+        Task<APIResponse<string>> Update(int Id, IncludesDTORequest ActivityDto);
     }
 }

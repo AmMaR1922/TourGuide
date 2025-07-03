@@ -18,18 +18,11 @@ namespace TourGuide.Controllers
             this.tripServices = tripServices;
         }
 
-
-        [HttpPost("AddTrip")]
-        public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
-        {
-            var response = await tripServices.Add(tripDto);
-            return StatusCode(response.StatusCode, response);
-        }
-
         [HttpGet("GetAllTrips")]
         public async Task<ActionResult<APIResponse<Pagination<TripDTOResponse>>>> GetAllTrips([FromQuery] TripSpecParams Params)
         {
-            var response = await tripServices.GetAll(Params);
+            var isAdmin = User.IsInRole("Admin");
+            var response = await tripServices.GetAll(Params, isAdmin);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -37,6 +30,13 @@ namespace TourGuide.Controllers
         public async Task<ActionResult<APIResponse<TripToBeReturnedDTO>>> GetTripById(int Id)
         {
             var response = await tripServices.GetById(Id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("AddTrip")]
+        public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
+        {
+            var response = await tripServices.Add(tripDto);
             return StatusCode(response.StatusCode, response);
         }
 
