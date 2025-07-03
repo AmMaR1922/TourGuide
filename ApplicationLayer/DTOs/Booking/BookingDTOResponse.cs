@@ -14,7 +14,7 @@ namespace ApplicationLayer.DTOs.Booking
         public int Children { get; set; }
         public DateTime TripDate { get; set; }
         public BookingStatus Status { get; set; }
-        public double TotalCost { get; set; }
+        public decimal TotalCost { get; set; }
         public int TripId { get; set; }
         public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }

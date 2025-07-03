@@ -6,6 +6,7 @@ using ApplicationLayer.Services;
 using InfrastructureLayer;
 using InfrastructureLayer.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using TourGuide.Services.AuthServices;
 using TourGuide.Services.EmailServices;
 
@@ -22,7 +23,53 @@ namespace TourGuide.Extentions
             Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             Services.AddEndpointsApiExplorer();
-            Services.AddSwaggerGen();
+
+            #region Swagger
+            Services.AddSwaggerGen(options =>
+            {
+                // Add Swagger doc
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Jenny Project API",
+                    Version = "v1",
+                    Description = "API for Real Estate, Construction, and User Management",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Jenny Team",
+                        Email = "support@jennyproject.com"
+                    }
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    //Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    In = ParameterLocation.Header,
+                    Description = "Enter only your JWT token (e.g., abc123). 'Bearer' prefix is added automatically."
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                In = ParameterLocation.Header,
+                Name = "Authorization"
+            },
+            Array.Empty<string>()
+        }
+    });
+
+                // Group by controller
+                options.TagActionsBy(api => new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] });
+            });
+            #endregion
 
             // Add CORS policy
             Services.AddCors(options =>

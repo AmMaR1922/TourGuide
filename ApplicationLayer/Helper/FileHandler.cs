@@ -18,10 +18,10 @@ namespace ApplicationLayer.Helper
                 return null;
             }
             var extention = Path.GetExtension(File.FileName);
-            if(extention != ".png" && extention != ".jpg" && extention != ".jpeg")
-            {
-                return null;
-            }
+            //if(extention != ".png" && extention != ".jpg" && extention != ".jpeg")
+            //{
+            //    return null;
+            //}
             await using var stream = File.OpenReadStream();
             if (!await ValidateByMagicNumberAsync(stream))
             {

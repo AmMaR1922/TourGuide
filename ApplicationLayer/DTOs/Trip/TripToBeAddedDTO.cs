@@ -15,7 +15,7 @@ namespace ApplicationLayer.DTOs.TripDtos
         public string Duration { get; set; } = null!;
         public string Description { get; set; } = null!;
         [Range(0, double.MaxValue)]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DateTime { get; set; }
         public string MeetingPointAddress { get; set; } = null!;

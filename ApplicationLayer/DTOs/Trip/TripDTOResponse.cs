@@ -12,7 +12,7 @@ namespace ApplicationLayer.DTOs.TripDtos
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public DateTime DateTime { get; set; }
         public double Rating { get; set; }
         public bool IsBestSeller { get; set; }
