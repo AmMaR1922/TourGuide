@@ -91,7 +91,7 @@ namespace ApplicationLayer.Services
                     Status = b.Status,
                     TripId = b.TripId,
                     UserId = b.UserId,
-                    TotalCost = b.Trip.Price * (b.Adults + ((double)b.Children / 2.0)),
+                    TotalCost = b.Trip.Price * (b.Adults + ((decimal)b.Children / 2)),
                     CreatedAt = b.CreatedAt
                 })
                 .ToListAsync();
@@ -129,7 +129,7 @@ namespace ApplicationLayer.Services
                 Status = booking.Status,
                 TripId = booking.TripId,
                 UserId = booking.UserId,
-                TotalCost = booking.Trip.Price * (booking.Adults + ((double)booking.Children / 2.0)),
+                TotalCost = booking.Trip.Price * (booking.Adults + ((decimal)booking.Children / 2)),
                 CreatedAt = booking.CreatedAt
             };
 

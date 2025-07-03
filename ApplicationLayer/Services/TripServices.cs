@@ -38,7 +38,7 @@ namespace ApplicationLayer.Services
                     IsAvailable = isAdmin ? trip.IsAvailable : null,
                     DateTime = trip.DateTime,
                     Category = trip.Category.Name,
-                    Rating = trip.TripReviews.Average(r => r.Rating),
+                    Rating = trip.TripReviews.Any() ? trip.TripReviews.Average(r => r.Rating) : 0,
                     IsBestSeller = trip.IsBestSeller,
                     Reviews = trip.TripReviews.Count(),
                     MainImageURL = URLResolver.BuildFileUrl(trip.TripImages.Where(i => i.IsMainImage).Select(img => img.ImageURL).FirstOrDefault())
@@ -64,7 +64,7 @@ namespace ApplicationLayer.Services
                     Price = T.Price,
                     IsAvailable = T.IsAvailable,
                     DateTime = T.DateTime,
-                    Rating = T.TripReviews.Average(r => r.Rating),
+                    Rating = T.TripReviews.Any() ? T.TripReviews.Average(r => r.Rating) : 0,
                     IsBestSeller = T.IsBestSeller,
                     CategoryId = T.CategoryId,
                     MeetingPoint = T.MeetingPoint,
@@ -73,7 +73,7 @@ namespace ApplicationLayer.Services
                     Includes = T.TripIncludes.Where(ti => ti.IsIncluded).Select(ti => ti.Includes.Name).ToList(),
                     NotIncludes = T.TripIncludes.Where(ti => !ti.IsIncluded).Select(ti => ti.Includes.Name).ToList(),
                     MainImage = URLResolver.BuildFileUrl(T.TripImages.Where(i => i.IsMainImage).Select(img => img.ImageURL).FirstOrDefault()),
-                    Images = T.TripImages.Select(img => URLResolver.BuildFileUrl(img.ImageURL)).ToList(),
+                    Images = T.TripImages.Where(i => i.IsMainImage == false).Select(img => URLResolver.BuildFileUrl(img.ImageURL)).ToList(),
                 }).FirstOrDefaultAsync();
 
             return trip is not null 
@@ -117,7 +117,7 @@ namespace ApplicationLayer.Services
                                         .ToListAsync();
 
                 Trip.Activities.AddRange(
-                  activities.Select(a => new TripActivities { Activity = a }));
+                  activities.Select(a => new TripActivities { ActivityId = a.Id }));
                 #endregion
 
                 #region Languages
@@ -127,7 +127,7 @@ namespace ApplicationLayer.Services
                                         .ToListAsync();
 
                 Trip.TripLanguages.AddRange(
-                    languages.Select(l => new TripLanguages { Language = l }));
+                    languages.Select(l => new TripLanguages { LanguageId = l.Id }));
                 #endregion
 
 
@@ -138,17 +138,17 @@ namespace ApplicationLayer.Services
                                                 .ToListAsync();
 
                 Trip.TripIncludes.AddRange(
-                    Includes.Select(i => new TripIncludes { Includes = i, IsIncluded = true }));
+                    Includes.Select(i => new TripIncludes { IncludesId = i.Id, IsIncluded = true }));
                 #endregion
 
                 #region NotIncludes
-                var NotIncludes = await unitOfWork.Repository<Includes>()
+                Includes = await unitOfWork.Repository<Includes>()
                                                 .GetAll()
                                                 .Where(i => TripDto.NotIncludes.Contains(i.Id))
                                                 .ToListAsync();
 
                 Trip.TripIncludes.AddRange(
-                    Includes.Select(i => new TripIncludes { Includes = i, IsIncluded = false }));
+                    Includes.Select(i => new TripIncludes { IncludesId = i.Id, IsIncluded = false }));
                 #endregion
 
 
@@ -162,13 +162,23 @@ namespace ApplicationLayer.Services
                     }
                 }
 
+                string MainImageUrl = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage);
+
+                if (MainImageUrl is null)
+                    throw new Exception("Main Image cannot be null");
+
                 Trip.TripImages.Add(new TripImages()
                 {
-                    ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
+                    ImageURL = MainImageUrl,
                     IsMainImage = true
                 });
 
                 await unitOfWork.Repository<Trip>().AddAsync(Trip);
+
+                var result = await unitOfWork.CompleteAsync();
+                if (!result)
+                    throw new Exception("An Error Ocurred.");
+
                 await transaction.CommitAsync();
 
                 return APIResponse<string>.SuccessResponse(201, null, "Trip added successfully.");

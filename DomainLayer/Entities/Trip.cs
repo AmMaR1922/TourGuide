@@ -12,7 +12,7 @@ namespace DomainLayer.Entities
         public string Name { get; set; } = null!;
         public string Duration { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public bool IsAvailable { get; set; } = true;
         public DateTime DateTime { get; set; }
         public bool IsBestSeller { get; set; } = false;

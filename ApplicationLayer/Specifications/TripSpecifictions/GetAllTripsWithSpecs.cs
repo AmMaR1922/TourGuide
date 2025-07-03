@@ -39,6 +39,9 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                         case "rating:asc":
                             AddOrderBy(trip => trip.TripReviews.Average(r => r.Rating));
                             break;
+                        case "rating:desc":
+                            AddOrderBy(trip => trip.TripReviews.Average(r => r.Rating), true);
+                            break;
                         case "date:asc":
                             AddOrderBy(trip => trip.DateTime);
                             break;
@@ -55,7 +58,7 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                             AddOrderBy(trip => trip.Name, true);
                             break;
                         default:
-                            AddOrderBy(_ => rand.Next());
+                            AddOrderBy(trip => rand.Next());
                             break;
                     }
                 }
