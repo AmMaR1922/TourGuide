@@ -10,6 +10,7 @@ namespace DomainLayer.Entities
     public class ApplicationUser : IdentityUser<int>
     {
         public string? ProfilePictureURL { get; set; }
+        public string FullName { get; set; } = null!;
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public ICollection<TripReviews> Reviews { get; set; } = new List<TripReviews>();
         public ICollection<Wishlist> Wishlist { get; set; } = new List<Wishlist>();
