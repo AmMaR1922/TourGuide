@@ -17,6 +17,9 @@ namespace ApplicationLayer.DTOs.ApplicationUser
 
         public string Role { get; set; } = null!;
 
+        public string? ProfilePictureURL { get; set;}
+
+
         public string AccessToken { get; set; } = null!;
 
         public DateTime RefreshTokenExperationDate { get; set; }
