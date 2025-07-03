@@ -20,7 +20,7 @@ namespace TourGuide.Controllers.AuthController
         private readonly UserManager<ApplicationUser> UserManager = userManager;
 
         [HttpPost("Register")]
-        public async Task<ActionResult<APIResponse<string>>> Register([FromBody]ApplicationUserRegisterDTO registerDTO)
+        public async Task<ActionResult<APIResponse<string>>> Register([FromForm]ApplicationUserRegisterDTO registerDTO)
         {
             if(!ModelState.IsValid)
             {
