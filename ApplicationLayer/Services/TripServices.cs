@@ -27,7 +27,7 @@ namespace ApplicationLayer.Services
 
         public async Task<APIResponse<Pagination<TripDTOResponse>>> GetAll(TripSpecParams Params, bool isAdmin)
         {
-            var Specs = new GetAllTripsWithSpecs(Params);
+            var Specs = new GetAllTripsWithSpecs(Params, isAdmin);
             var Trips = await unitOfWork.Repository<Trip>().GetAllWithSpecification(Specs)
                 .Select(trip => new TripDTOResponse
                 {
@@ -90,8 +90,8 @@ namespace ApplicationLayer.Services
 
             bool result = false;
 
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
-            {
+            using var transaction = await unitOfWork.BeginTransactionAsync();
+            
                 var Trip = new Trip()
                 {
                     Name = TripDto.Name,
@@ -155,11 +155,18 @@ namespace ApplicationLayer.Services
 
                 await unitOfWork.Repository<Trip>().AddAsync(Trip);
                 result = await unitOfWork.CompleteAsync();
-            }
+
 
             if (!result)
+            {
+                foreach (var image in Trip.TripImages)
+                    FileHandler.DeleteFile(image.ImageURL);
+
+                await transaction.RollbackAsync();
                 return APIResponse<string>.FailureResponse(500, null, "Failed to add trip.");
-            
+            }
+
+            await transaction.CommitAsync();
             return APIResponse<string>.SuccessResponse(201, null, "Trip added successfully.");
 
         }
@@ -182,12 +189,13 @@ namespace ApplicationLayer.Services
         public async Task<APIResponse<string>> Update(int Id, TripToBeUpdatedDTO TripDto)
         {
             bool result = false;
-            using (var transaction = await unitOfWork.BeginTransactionAsync())
-            {
-                var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(Id);
-                if (trip == null)
-                    return APIResponse<string>.FailureResponse(404, null, "Trip Not found.");
 
+            var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(Id);
+            if (trip == null)
+                return APIResponse<string>.FailureResponse(404, null, "Trip Not found.");
+
+            using var transaction = await unitOfWork.BeginTransactionAsync();
+            
                 trip.Name = TripDto.Name;
                 trip.Description = TripDto.Description;
                 trip.Duration = TripDto.Duration;
@@ -275,13 +283,21 @@ namespace ApplicationLayer.Services
                     ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
                     IsMainImage = true
                 });
+            
 
-                unitOfWork.Repository<Trip>().Update(trip);
-                result = await unitOfWork.CompleteAsync();
-            }
+            unitOfWork.Repository<Trip>().Update(trip);
+            result = await unitOfWork.CompleteAsync();
 
             if (!result)
-                return APIResponse<string>.FailureResponse(500, null, "An Error Occured.");
+            {
+                foreach (var image in trip.TripImages)
+                    FileHandler.DeleteFile(image.ImageURL);
+
+                await transaction.RollbackAsync();
+                return APIResponse<string>.FailureResponse(500, null, "Failed to Update trip.");
+            }
+
+            await transaction.CommitAsync();
             return APIResponse<string>.SuccessResponse(200, null, "Trip Updated Successfully.");
         }
     }

@@ -1,13 +1,17 @@
 ﻿using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.DTOs.Activity;
 using ApplicationLayer.Models;
+using DomainLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ActivityController : ControllerBase
     {
         private readonly IActivityServices activityServices;

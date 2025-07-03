@@ -3,6 +3,7 @@ using ApplicationLayer.DTOs.CategoryDto;
 using ApplicationLayer.Models;
 using ApplicationLayer.QueryParams;
 using DomainLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices categoryServices;

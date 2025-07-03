@@ -14,7 +14,7 @@ namespace ApplicationLayer.Contracts.Services
     {
         Task<APIResponse<string>> Add(ReviewDTORequest reviewDto, ApplicationUser user);
         Task<APIResponse<Pagination<ReviewDTOResponse>>> GetAll(ReviewsSpecParams Params);
-
-
+        Task<APIResponse<string>> Delete(int TripId, ApplicationUser user);
+        Task<APIResponse<string>> Update(ReviewDTORequest reviewDto, ApplicationUser user);
     }
 }
