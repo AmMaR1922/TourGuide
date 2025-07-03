@@ -285,8 +285,7 @@ namespace TourGuide.Services.AuthServices
                      $"&token={Uri.EscapeDataString(EmailConfirmationToken)}";
 
             var template = await File.ReadAllTextAsync(
-                Path.Combine(Directory.GetCurrentDirectory(),
-                              
+                Path.Combine(_env.ContentRootPath,
                              "EmailTemplates", 
                              "EmailConfirmation.html"));
 
