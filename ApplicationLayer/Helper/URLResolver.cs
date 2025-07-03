@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,11 +19,11 @@ namespace ApplicationLayer.Helper
 
         public static string? BuildFileUrl(string? relativePath)
         {
-            if (string.IsNullOrWhiteSpace(relativePath) || _accessor?.HttpContext?.Request == null)
+            if (string.IsNullOrWhiteSpace(relativePath))
                 return null;
 
-            var request = _accessor.HttpContext.Request;
-            return $"{request.Scheme}://{request.Host}/{relativePath}";
+            var request = _accessor?.HttpContext.Request;
+            return $"{request?.Scheme}://{request?.Host}/{relativePath}";
         }
 
     }
