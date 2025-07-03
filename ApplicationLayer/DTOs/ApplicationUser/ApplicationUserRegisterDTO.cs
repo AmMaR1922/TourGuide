@@ -14,9 +14,11 @@ namespace ApplicationLayer.DTOs.ApplicationUser
         [Required]
         public string Email { get; set; } = null!;
 
+        public string FullName { get; set; } = null!;
+
 
         [Required]
-        [Length(8,8,ErrorMessage ="Password Must Be at Least 8 chars")]
+        [Length(8,128,ErrorMessage ="Password Must Be at Least 8 chars")]
         public string Password { get; set; } = null!;
 
         [Required]

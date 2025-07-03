@@ -4,6 +4,7 @@ using ApplicationLayer.DTOs.ApplicationUser;
 using ApplicationLayer.Helper;
 using ApplicationLayer.Models;
 using DomainLayer.Entities;
+using InfrastructureLayer.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -23,13 +24,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TourGuide.Services.AuthServices
 {
-    public class AuthServices(UserManager<ApplicationUser> usermanager , RoleManager<IdentityRole<int>> rolemanager , ITokenServices tokenServices , IMailingService mailingService,IWebHostEnvironment webHost) : IAuthServices
+    public class AuthServices(UserManager<ApplicationUser> usermanager , RoleManager<IdentityRole<int>> rolemanager , ITokenServices tokenServices , IMailingService mailingService,IWebHostEnvironment webHost,TourGuideDbContext DbContext) : IAuthServices
     {
         private readonly UserManager<ApplicationUser> UserManager = usermanager;
         private readonly RoleManager<IdentityRole<int>> RoleManager = rolemanager;
         private readonly ITokenServices TokenServices = tokenServices;
         private readonly IMailingService MailingService = mailingService;
         private readonly IWebHostEnvironment _env = webHost;
+        private readonly TourGuideDbContext DbContext=DbContext;
 
         public async Task<APIResponse<ApplicationUserResponseDTO>> GetNewToken(string RefreshToken)
         {
@@ -179,45 +181,61 @@ namespace TourGuide.Services.AuthServices
                 Email = appuser.Email,
                 PhoneNumber = appuser.PhoneNumber,
                 UserName = UserName,
-                ProfilePictureURL = await FileHandler.SaveFileAsync("ProfilesPictures", appuser.ProfilePicture)
+                ProfilePictureURL = await FileHandler.SaveFileAsync("ProfilesPictures", appuser.ProfilePicture),
+                FullName = appuser.FullName
 
             };
 
-           var result= await UserManager.CreateAsync(user, appuser.Password);
-            if(!result.Succeeded)
+          await using var tc = await DbContext.Database.BeginTransactionAsync();
+
+            try
             {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<string>.FailureResponse(400, errors, "Failed To Add User");
+
+                var result = await UserManager.CreateAsync(user, appuser.Password);
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(e => e.Description).ToList();
+                    return APIResponse<string>.FailureResponse(400, errors, "Failed To Add User");
+                }
+
+                if (!await RoleManager.RoleExistsAsync("NormalUser"))
+                {
+                    
+                    return APIResponse<string>.FailureResponse(400, new List<string> { "Role not Exited" }, "Failed To Add User");
+
+                }
+
+
+                result = await UserManager.AddToRoleAsync(user, "NormalUser");
+                if (!result.Succeeded)
+                {
+                  
+                    var errors = result.Errors.Select(e => e.Description).ToList();
+                    return APIResponse<string>.FailureResponse(400, errors, "Failed To Add User");
+
+                }
+
+              
+
+                await SendConfirmationEmail(user, request);
+                await tc.CommitAsync();
+
+            }
+            catch (Exception ex)
+            {
+               
+
+
+                return APIResponse<string>.FailureResponse(500, new List<string>{ "An unexpected error occurred" }, "Registration failed");
+
             }
 
-            if(!await RoleManager.RoleExistsAsync("NormalUser"))
-            {
-                return APIResponse<string>.FailureResponse(400, new List<string> {"Role not Exited"}, "Failed To Add User");
-
-            }
-
-
-            result = await UserManager.AddToRoleAsync(user, "NormalUser");
-            if(!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return APIResponse<string>.FailureResponse(400, errors, "Failed To Add User");
-
-            }
-           
-
-
-            await SendConfirmationEmail(user, request);
 
 
 
 
 
 
-
-
-
-       
             // var RefreshToken = TokenServices.GetRefreshToken();
             // user.RefreshTokens!.Add(RefreshToken);
 
@@ -285,8 +303,6 @@ namespace TourGuide.Services.AuthServices
 
             var template = await File.ReadAllTextAsync(
                 Path.Combine(_env.ContentRootPath,
-                                 "Services",
-                             "EmailServices",
                              "EmailTemplates", 
                              "EmailConfirmation.html"));
 
