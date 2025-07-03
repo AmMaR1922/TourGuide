@@ -119,16 +119,24 @@ namespace TourGuide.Extentions
 
               
 
-                google.ClaimActions.Clear();              // optional, if you want just email/name/picture
+                google.ClaimActions.Clear();              
                 google.ClaimActions.MapJsonKey(
-                    claimType: ClaimTypes.NameIdentifier,  // maps Google’s “id” → ClaimTypes.NameIdentifier
+                    claimType: ClaimTypes.NameIdentifier,  
                     jsonKey: "id");
                 google.ClaimActions.MapJsonKey(
-                    claimType: ClaimTypes.Email,           // maps Google’s “email” → ClaimTypes.Email
+                    claimType: ClaimTypes.Email,           
                     jsonKey: "email");
-               
 
                
+                google.ClaimActions.MapJsonKey("urn:google:picture", "picture");
+
+
+
+
+
+
+
+
 
                 google.SignInScheme = IdentityConstants.ExternalScheme;
             });
