@@ -58,5 +58,21 @@ namespace TourGuide.Controllers
             var response = await tripServices.Delete(Id);
             return StatusCode(response.StatusCode, response);
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("AddImagesToTrip/{TripId}")]
+        public async Task<ActionResult<APIResponse<string>>> AddImagesToTrip(int TripId, [FromForm] List<IFormFile> images)
+        {
+            var response = await tripServices.AddImagesToTrip(TripId, images);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteImagesFromTrip/{TripId}")]
+        public async Task<ActionResult<APIResponse<string>>> DeleteImagesFromTrip(int TripId, [FromForm] List<int> imageIds)
+        {
+            var response = await tripServices.DeleteImagesFromTrip(TripId, imageIds);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

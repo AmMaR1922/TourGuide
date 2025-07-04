@@ -19,11 +19,11 @@ namespace ApplicationLayer.DTOs.Trip
         public bool IsBestSeller { get; set; } = false;
         public MeetingPoint MeetingPoint { get; set; } = null!;
         public int CategoryId { get; set; }
-        public string MainImage { get; set; } = null!;
+        public ImageDTO MainImage { get; set; } = null!;
         public List<string> Activities { get; set; } = new List<string>();
         public List<string> Languages { get; set; } = new List<string>();
         public List<string> Includes { get; set; } = new List<string>();
         public List<string> NotIncludes { get; set; } = new List<string>();
-        public List<string> Images { get; set; } = new List<string>();
+        public List<ImageDTO> Images { get; set; } = new List<ImageDTO>();
     }
 }
