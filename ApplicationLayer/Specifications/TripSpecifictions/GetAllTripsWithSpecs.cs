@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Models;
 using ApplicationLayer.QueryParams;
 using DomainLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,6 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                 (Params.IsBestSeller == null || trip.IsBestSeller == Params.IsBestSeller) &&
                 (Params.IsTopRated == null || trip.TripReviews.Average(r => r.Rating) >= 4) &&
                 (isAdmin || trip.IsAvailable == true);
-                
-
-            int seed = DateTime.Today.GetHashCode();
-            var rand = new Random(seed);
 
             if (Params.Sort != null && Params.Sort.Any())
             {
@@ -58,7 +55,7 @@ namespace ApplicationLayer.Specifications.TripSpecifictions
                             AddOrderBy(trip => trip.Name, true);
                             break;
                         default:
-                            AddOrderBy(trip => rand.Next());
+                            AddOrderBy(trip => Guid.NewGuid());
                             break;
                     }
                 }
