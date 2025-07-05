@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.DTOs.Includes;
 using ApplicationLayer.Models;
+using ApplicationLayer.QueryParams;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace ApplicationLayer.Contracts.Services
 {
     public interface IIncludesServices 
     {
-        Task<APIResponse<List<IncludesDTOResponse>>> GetAll();
+        Task<APIResponse<Pagination<IncludesDTOResponse>>> GetAll(SpecParams spec);
         Task<APIResponse<IncludesDTOResponse>> GetById(int Id);
         Task<APIResponse<string>> Add(IncludesDTORequest ActivityDto);
         Task<APIResponse<string>> Delete(int Id);

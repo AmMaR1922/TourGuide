@@ -35,7 +35,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost("AddTrip")]
         public async Task<ActionResult<APIResponse<string>>> AddTrip([FromForm] TripToBeAddedDTO tripDto)
         {
@@ -43,7 +43,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("UpdateTrip/{Id}")]
         public async Task<ActionResult<APIResponse<string>>> UpdateTrip([FromForm] TripToBeUpdatedDTO tripDto, int Id)
         {
@@ -51,7 +51,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("DeleteTrip/{Id}")]
         public async Task<ActionResult<string>> DeleteTrip(int Id)
         {

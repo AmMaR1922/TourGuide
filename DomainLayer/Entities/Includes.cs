@@ -11,5 +11,6 @@ namespace DomainLayer.Entities
     {
         public string Name { get; set; } = null!;
         public ICollection<TripIncludes> TripIncludes { get; set; } = new List<TripIncludes>();
+        public ICollection<IncludesTranslation> IncludesTranslations { get; set; } = new HashSet<IncludesTranslation>();
     }
 }

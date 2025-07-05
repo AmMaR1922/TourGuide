@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.DTOs.Includes;
 using ApplicationLayer.Models;
+using ApplicationLayer.QueryParams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
 
     public class IncludesController : ControllerBase
     {
@@ -21,9 +22,9 @@ namespace TourGuide.Controllers
         }
 
         [HttpGet("GetAllIncludes")]
-        public async Task<ActionResult<APIResponse<List<IncludesDTOResponse>>>> GetAllIncludes()
+        public async Task<ActionResult<APIResponse<List<IncludesDTOResponse>>>> GetAllIncludes([FromQuery]SpecParams spec)
         {
-            var response = await includesServices.GetAll();
+            var response = await includesServices.GetAll(spec);
             return StatusCode(response.StatusCode, response);
         }
 

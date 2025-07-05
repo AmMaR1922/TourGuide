@@ -3,6 +3,8 @@ using ApplicationLayer.Contracts.UnitToWork;
 using ApplicationLayer.DTOs.Activity;
 using ApplicationLayer.DTOs.Includes;
 using ApplicationLayer.Models;
+using ApplicationLayer.QueryParams;
+using ApplicationLayer.Specifications.IncludeSpecification;
 using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,17 +23,24 @@ namespace ApplicationLayer.Services
         {
             this.unitOfWork = unitOfWork;
         }
-        public async Task<APIResponse<List<IncludesDTOResponse>>> GetAll()
+        public async Task<APIResponse<Pagination<IncludesDTOResponse>>> GetAll(SpecParams Spec)
         {
-            var Includes = await unitOfWork.Repository<Includes>().GetAll()
-                .Select(a => new IncludesDTOResponse()
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                })
-                .ToListAsync();
+            var Specsdata = new IncludeSpecificationGetAll(Spec);
+            var SpecCount = new IncludeSpecificationGetAllCount(Spec);
 
-            return APIResponse<List<IncludesDTOResponse>>.SuccessResponse(200, Includes, "Includes Retrieved Successfully.");
+            var data = await unitOfWork.Repository<Includes>().GetAllWithSpecification(Specsdata)
+            .Select(a => new IncludesDTOResponse()
+            {
+                Id = a.Id,
+                Name = a.Name,
+            })
+            .ToListAsync();
+
+            var count = await unitOfWork.Repository<Includes>().GetCountWithSpecs(SpecCount);
+
+           
+
+            return APIResponse<Pagination<IncludesDTOResponse>>.SuccessResponse(200,new Pagination<IncludesDTOResponse>(Spec.PageNumber,Spec.PageSize,count,data) , "Includes Retrieved Successfully.");
         }
 
         public async Task<APIResponse<IncludesDTOResponse>> GetById(int Id)
@@ -55,8 +64,8 @@ namespace ApplicationLayer.Services
             if (IncludeExists)
                 return APIResponse<string>.FailureResponse(400, null, "Include already exists with this name.");
 
-            var activity = new Activity() { Name = IncludeDto.Name };
-            await unitOfWork.Repository<Activity>().AddAsync(activity);
+            var Include = new Includes() { Name = IncludeDto.Name };
+            await unitOfWork.Repository<Includes>().AddAsync(Include);
             var result = await unitOfWork.CompleteAsync();
 
             if (!result)

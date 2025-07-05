@@ -11,7 +11,7 @@ namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class ActivityController : ControllerBase
     {
         private readonly IActivityServices activityServices;
