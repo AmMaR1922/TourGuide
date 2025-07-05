@@ -17,7 +17,7 @@ namespace InfrastructureLayer
                 query = query.Where(specification.Criteria);
             }
 
-            if (specification.Includes != null)
+            if (specification.Includes != null && specification.Includes.Count()>0)
             {
                 foreach (var include in specification.Includes)
                 {

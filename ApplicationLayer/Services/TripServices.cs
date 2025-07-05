@@ -47,7 +47,7 @@ namespace ApplicationLayer.Services
                 })
                 .ToListAsync();
 
-            var CountSpecs = new CountAllTripsWithSpecs(Params);
+            var CountSpecs = new CountAllTripsWithSpecs(Params , isAdmin);
             var Count = await unitOfWork.Repository<Trip>().GetCountWithSpecs(CountSpecs);
 
             var Pagination = new Pagination<TripDTOResponse>(Params.PageNumber, Params.PageSize, Count, Trips);
