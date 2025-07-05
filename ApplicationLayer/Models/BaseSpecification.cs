@@ -28,7 +28,6 @@ namespace ApplicationLayer.Models
         public int Skip { get; set; }
         public int Take { get; set; }
 
-
         public void ApplyPagination(int Skip, int Take)
         {
             this.Skip = Skip;

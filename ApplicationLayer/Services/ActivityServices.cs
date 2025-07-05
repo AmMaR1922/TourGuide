@@ -4,6 +4,7 @@ using ApplicationLayer.DTOs.Activity;
 using ApplicationLayer.DTOs.CategoryDto;
 using ApplicationLayer.Models;
 using ApplicationLayer.QueryParams;
+using ApplicationLayer.Specifications.ActivitySpecifications;
 using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,9 +23,10 @@ namespace ApplicationLayer.Services
         {
             this.unitOfWork = unitOfWork;
         }
-        public async Task<APIResponse<List<ActivityDTOResponse>>> GetAll()
+        public async Task<APIResponse<List<ActivityDTOResponse>>> GetAll(SpecParams Params)
         {
-            var Activities = await unitOfWork.Repository<Activity>().GetAll()
+            var Specs = new GetAllActivitiesSpecifications(Params);
+            var Activities = await unitOfWork.Repository<Activity>().GetAllWithSpecification(Specs)
                 .Select(a => new ActivityDTOResponse()
                 {
                     Id = a.Id,

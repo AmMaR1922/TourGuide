@@ -13,7 +13,6 @@ namespace ApplicationLayer.Specifications.IncludeSpecification
 {
     public class IncludeSpecificationGetAll:BaseSpecification<Includes>
     {
-
         public IncludeSpecificationGetAll(SpecParams spec)
         {
             Criteria = i => (string.IsNullOrWhiteSpace(spec.Search) || EF.Functions.Like(i.Name, $"%{spec.Search}%"));
