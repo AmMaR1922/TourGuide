@@ -26,5 +26,6 @@ namespace DomainLayer.Entities
         public List<TripReviews> TripReviews { get; set; } = new List<TripReviews>();
         public List<Booking> TripBookings { get; set; } = new List<Booking>();
         public List<Wishlist>  Wishlist { get; set; } = new List<Wishlist>();
+        public ICollection<TripTranslation> TripTranslations { get; set; } = new HashSet<TripTranslation>();    
     }
 }

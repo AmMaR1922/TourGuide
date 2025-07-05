@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Entities
 {
-    public class ActivityTranslation:BaseEntity
+    public class IncludesTranslation:BaseEntity
     {
-        public int ActivityId { get; set; }
-        public Activity Activity { get; set; } = null!;
+        public int IncludeId { get; set; }
+        public Includes Includes { get; set; } = null!;
+
         public int LanguageId { get; set; }
         public Language Language { get; set; } = null!;
         public string Name { get; set; } = null!;
+
 
     }
 }

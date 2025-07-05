@@ -11,6 +11,14 @@ namespace DomainLayer.Entities
     {
         public string Code { get; set; } = null!;
         public string Name { get; set; } = null!;
+
         public ICollection<TripLanguages> TripLanguages { get; set; } = new List<TripLanguages>();
+
+        public ICollection<ActivityTranslation> ActivityTranslation { get; set; } = new HashSet<ActivityTranslation>();
+        public ICollection<CategoryTranslation> CategoryTranslations { get; set; } = new HashSet<CategoryTranslation>();
+        public ICollection<IncludesTranslation> IncludesTranslations { get; set; } = new HashSet<IncludesTranslation>();
+        public ICollection<TripTranslation> TripTranslations { get; set; } = new HashSet<TripTranslation>();
+
+      
     }
 }
