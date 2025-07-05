@@ -206,17 +206,17 @@ namespace ApplicationLayer.Services
 
             using var transaction = await unitOfWork.BeginTransactionAsync();
             
-                trip.Name = TripDto.Name;
-                trip.Description = TripDto.Description;
-                trip.DurationInMinutes = TripDto.Duration;
-                trip.Price = TripDto.Price;
-                trip.IsAvailable = TripDto.IsAvailable;
-                trip.DateTime = TripDto.DateTime;
-                trip.MeetingPoint.Address = TripDto.MeetingPointAddress;
-                trip.MeetingPoint.URL = TripDto.MeetingPointURL;
-                trip.CategoryId = TripDto.CategoryId;
+            trip.Name = TripDto.Name;
+            trip.Description = TripDto.Description;
+            trip.DurationInMinutes = TripDto.Duration;
+            trip.Price = TripDto.Price;
+            trip.IsAvailable = TripDto.IsAvailable;
+            trip.DateTime = TripDto.DateTime;
+            trip.MeetingPoint.Address = TripDto.MeetingPointAddress;
+            trip.MeetingPoint.URL = TripDto.MeetingPointURL;
+            trip.CategoryId = TripDto.CategoryId;
 
-                #region Activity
+            #region Activity
                 //foreach (var tripActivity in trip.Activities)
                 //{
                 //    unitOfWork.Repository<TripActivities>().Delete(tripActivity);
@@ -231,7 +231,7 @@ namespace ApplicationLayer.Services
                 }
                 #endregion
 
-                #region Languages
+            #region Languages
                 //foreach (var tripLanguage in trip.TripLanguages)
                 //{
                 //    unitOfWork.Repository<TripLanguages>().Delete(tripLanguage);
@@ -246,39 +246,32 @@ namespace ApplicationLayer.Services
                 }
                 #endregion
 
-                #region Includes
-                //foreach(var tripInclude in trip.TripIncludes)
-                //{
-                //    unitOfWork.Repository<TripIncludes>().Delete(tripInclude);
-                //}
-                trip.TripIncludes.Clear();
+            #region Includes
+            trip.TripIncludes.Clear();
 
-                foreach (var includeId in TripDto.Includes)
-                {
-                    var include = await unitOfWork.Repository<Includes>().GetByIdAsync(includeId);
-                    if (include != null)
-                        trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = true });
-                }
-                #endregion
+            var includes = await unitOfWork.Repository<Includes>().GetAll()
+                .Where(i => TripDto.Includes.Contains(i.Id))
+                .ToListAsync();
 
-                #region NotInclude
-                foreach (var NotIncludeId in TripDto.Includes)
-                {
-                    var include = await unitOfWork.Repository<Includes>().GetByIdAsync(NotIncludeId);
-                    if (include != null)
-                        trip.TripIncludes.Add(new TripIncludes { Includes = include, IsIncluded = false });
-                }
-                #endregion
+            trip.TripIncludes.AddRange(includes.Select(ti => new TripIncludes { IncludesId = ti.Id, IsIncluded = true }));
 
-                FileHandler.DeleteFile(trip.TripImages.Where(i => i.IsMainImage).Select(i => i.ImageURL).FirstOrDefault());
+            includes.Clear();
 
-                trip.TripImages.Add(new TripImages()
-                {
-                    ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
-                    IsMainImage = true
-                });
+            includes = await unitOfWork.Repository<Includes>().GetAll()
+                .Where(i => TripDto.NotIncludes.Contains(i.Id))
+                .ToListAsync();
+
+            trip.TripIncludes.AddRange(includes.Select(ti => new TripIncludes { IncludesId = ti.Id, IsIncluded = false }));
+            #endregion
+
+            FileHandler.DeleteFile(trip.TripImages.Where(i => i.IsMainImage).Select(i => i.ImageURL).FirstOrDefault());
+
+            trip.TripImages.Add(new TripImages()
+            {
+                ImageURL = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage),
+                IsMainImage = true
+            });
             
-
             unitOfWork.Repository<Trip>().Update(trip);
             result = await unitOfWork.CompleteAsync();
 
