@@ -20,8 +20,11 @@ namespace InfrastructureLayer.Data.Configuration
             #endregion
 
             #region Name
-            builder.Property(i => i.Name)
-                   .IsRequired(true);
+            //builder.Property(i => i.Name)
+            //       .IsRequired(true);
+
+            builder.HasIndex(i => i.Name)
+                .IsUnique();
             #endregion
 
 

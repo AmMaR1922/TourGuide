@@ -16,11 +16,19 @@ namespace InfrastructureLayer.Data.Configuration
             #region Id
             builder.HasKey(t => t.Id);
             #endregion
+            builder.Property(t => t.Name)
+                .IsRequired(true);
+
+            builder.HasIndex(t=>t.Name)
+                .IsUnique(true);
 
             #region Price
             builder.Property(t => t.Price)
                    .HasPrecision(10, 2)
                    .IsRequired();
+
+            builder.HasIndex(t=>t.Price)
+                .IsUnique(false);
             #endregion
 
             #region Duration

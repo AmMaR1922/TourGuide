@@ -33,6 +33,11 @@ namespace InfrastructureLayer.Data.Configuration
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+
+            builder.HasIndex(b => b.TripDate)
+                .IsUnique(false);
+
         }
     }
 }

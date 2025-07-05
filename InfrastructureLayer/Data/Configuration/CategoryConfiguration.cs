@@ -24,6 +24,15 @@ namespace InfrastructureLayer.Data.Configuration
                 .HasForeignKey(c=>c.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            #region Name
+
+            builder.HasIndex(c => c.Name)
+                .IsUnique(true);
+
+            builder.Property(c => c.Name)
+                .IsRequired(true); 
+            #endregion
+
         }
     }
 }

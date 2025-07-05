@@ -19,12 +19,23 @@ namespace InfrastructureLayer.Data.Configuration
             #endregion
 
             #region Code
-            builder.Property(l => l.Code).IsRequired();
-            builder.Property(l => l.Code).HasMaxLength(4);
+            builder.Property(l => l.Code)
+                .IsRequired();
+
+            builder.Property(l => l.Code)
+                .HasMaxLength(4);
+
+            builder.HasIndex(l => l.Code)
+                .IsUnique(true);
+
             #endregion
 
             #region Name
-            builder.Property(l => l.Name).IsRequired();
+            builder.Property(l => l.Name)
+                .IsRequired();
+
+            builder.HasIndex(l => l.Name)
+               .IsUnique(true);
             #endregion
 
             #region TripTransRelation  

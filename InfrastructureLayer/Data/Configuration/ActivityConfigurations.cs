@@ -20,6 +20,14 @@ namespace InfrastructureLayer.Data.Configuration
             #endregion
 
 
+            #region Name
+            builder.Property(a => a.Name)
+                .IsRequired(true);
+
+            builder.HasIndex(a => a.Name)
+                .IsUnique(true);
+            #endregion
+
             #region ActivityTrans Relation
             builder.HasMany(a => a.ActivityTranslations)
                    .WithOne(a => a.Activity)
