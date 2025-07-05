@@ -58,6 +58,10 @@ namespace InfrastructureLayer.Data.Context
         public DbSet<TripLanguages> TripLanguages { get; set; }
         public DbSet<TripActivities> TripActivities { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<ActivityTranslation> ActivityTranslations { get; set; }
+        public DbSet<IncludesTranslation> IncludesTranslations { get; set; }
+        public DbSet<TripTranslation> TripTranslations { get; set; }
+        public DbSet<CategoryTranslation> CategoryTranslations { get; set; }
 
     }
 }

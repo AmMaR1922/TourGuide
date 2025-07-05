@@ -42,6 +42,20 @@ namespace InfrastructureLayer.Data.Configuration
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
+
+            #region TripLanguages
+            builder.HasMany(t => t.TripLanguages)
+                .WithOne(l => l.Trip)
+                .HasForeignKey(l=>l.TripId);
+            #endregion
+
+            #region TripTranslations
+            builder.HasMany(t => t.TripTranslations)
+                .WithOne(tt => tt.Trip)
+                .HasForeignKey(tt => tt.TripId)
+                .OnDelete(DeleteBehavior.Cascade);
+            #endregion
+
         }
     }
 }
