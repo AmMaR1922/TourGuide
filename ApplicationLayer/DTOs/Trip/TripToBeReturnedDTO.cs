@@ -10,7 +10,7 @@ namespace ApplicationLayer.DTOs.Trip
     public class TripToBeReturnedDTO
     {
         public string Name { get; set; } = null!;
-        public string Duration { get; set; } = null!;
+        public int Duration { get; set; }
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
         public bool? IsAvailable { get; set; } = true;

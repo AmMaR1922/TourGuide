@@ -35,7 +35,7 @@ namespace ApplicationLayer.Services
                 {
                     Id = trip.Id,
                     Name = trip.Name,
-                    Duration = trip.Duration,
+                    Duration = trip.DurationInMinutes,
                     Price = trip.Price,
                     IsAvailable = isAdmin ? trip.IsAvailable : null,
                     DateTime = trip.DateTime,
@@ -61,7 +61,7 @@ namespace ApplicationLayer.Services
                 .Select(T => new TripToBeReturnedDTO()
                 {
                     Name = T.Name,
-                    Duration = T.Duration,
+                    Duration = T.DurationInMinutes,
                     Description = T.Description,
                     Price = T.Price,
                     IsAvailable = T.IsAvailable,
@@ -94,7 +94,7 @@ namespace ApplicationLayer.Services
             var Trip = new Trip()
             {
                 Name = TripDto.Name,
-                Duration = TripDto.Duration,
+                DurationInMinutes = TripDto.Duration,
                 Description = TripDto.Description,
                 Price = TripDto.Price,
                 IsAvailable = TripDto.IsAvailable,
@@ -208,7 +208,7 @@ namespace ApplicationLayer.Services
             
                 trip.Name = TripDto.Name;
                 trip.Description = TripDto.Description;
-                trip.Duration = TripDto.Duration;
+                trip.DurationInMinutes = TripDto.Duration;
                 trip.Price = TripDto.Price;
                 trip.IsAvailable = TripDto.IsAvailable;
                 trip.DateTime = TripDto.DateTime;

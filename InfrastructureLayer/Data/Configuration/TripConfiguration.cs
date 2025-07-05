@@ -23,11 +23,6 @@ namespace InfrastructureLayer.Data.Configuration
                    .IsRequired();
             #endregion
 
-            #region Duration
-            builder.Property(t => t.Duration)
-              .HasMaxLength(100);
-            #endregion
-
             #region Category
             builder.HasOne(t => t.Category)
                 .WithMany(c => c.Trips)

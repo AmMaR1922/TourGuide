@@ -1,6 +1,7 @@
 ﻿using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.DTOs.Activity;
 using ApplicationLayer.Models;
+using ApplicationLayer.QueryParams;
 using DomainLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,9 +23,9 @@ namespace TourGuide.Controllers
         }
 
         [HttpGet("GetAllActivities")]
-        public async Task<ActionResult<APIResponse<List<ActivityDTOResponse>>>> GetAllActivities()
+        public async Task<ActionResult<APIResponse<List<ActivityDTOResponse>>>> GetAllActivities(SpecParams Params)
         {
-            var response = await activityServices.GetAll();
+            var response = await activityServices.GetAll(Params);
             return StatusCode(response.StatusCode, response);
         }
 

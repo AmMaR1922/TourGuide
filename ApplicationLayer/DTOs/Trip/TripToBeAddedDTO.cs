@@ -12,7 +12,7 @@ namespace ApplicationLayer.DTOs.TripDtos
     public  class TripToBeAddedDTO
     {
         public string Name { get; set; } = null!;
-        public string Duration { get; set; } = null!;
+        public int Duration { get; set; }
         public string Description { get; set; } = null!;
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }

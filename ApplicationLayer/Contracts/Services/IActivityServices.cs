@@ -11,7 +11,7 @@ namespace ApplicationLayer.Contracts.Services
 {
     public interface IActivityServices
     {
-        Task<APIResponse<List<ActivityDTOResponse>>> GetAll();
+        Task<APIResponse<List<ActivityDTOResponse>>> GetAll(SpecParams Params);
         Task<APIResponse<ActivityDTOResponse>> GetById(int Id);
         Task<APIResponse<string>> Add(ActivityDTORequest ActivityDto);
         Task<APIResponse<string>> Delete(int Id);
