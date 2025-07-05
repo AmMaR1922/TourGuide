@@ -30,7 +30,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("AddReview")]
         public async Task<APIResponse<string>> AddReview([FromBody] ReviewDTORequest reviewDTORequest)
         {
@@ -40,7 +40,7 @@ namespace TourGuide.Controllers
             return APIResponse<string>.SuccessResponse(200, null, "Review added successfully");
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("DeleteReview/{TripId}")]
         public async Task<ActionResult<APIResponse<string>>> DeleteReview(int TripId)
         {
@@ -49,7 +49,7 @@ namespace TourGuide.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("UpdateReview")]
         public async Task<ActionResult<APIResponse<string>>> UpdateReview([FromBody] ReviewDTORequest reviewDTORequest)
         {
