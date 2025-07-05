@@ -24,7 +24,7 @@ namespace TourGuide.Controllers
         }
 
         [HttpGet("GetReviews")]
-        public async Task<ActionResult<APIResponse<List<TripReviews>>>> GetAllReviews(ReviewsSpecParams Params)
+        public async Task<ActionResult<APIResponse<List<TripReviews>>>> GetAllReviews([FromQuery]ReviewsSpecParams Params)
         {
             var response = await reviewsServices.GetAll(Params);
             return StatusCode(response.StatusCode, response);

@@ -13,7 +13,7 @@ namespace TourGuide.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class BookingController : ControllerBase
     {
         private readonly IBookingServices bookingServices;
