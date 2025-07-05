@@ -26,7 +26,6 @@ namespace ApplicationLayer.DTOs.TripDtos
         public List<int> Languages { get; set; } = new List<int>();
         public List<int> Includes { get; set; } = new List<int>();
         public List<int> NotIncludes { get; set; } = new List<int>();
-        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
     }
 }
  

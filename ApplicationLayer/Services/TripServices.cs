@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.Contracts.Services;
 using ApplicationLayer.Contracts.UnitToWork;
+using ApplicationLayer.DTOs;
 using ApplicationLayer.DTOs.Trip;
 using ApplicationLayer.DTOs.TripDtos;
 using ApplicationLayer.Helper;
@@ -7,6 +8,7 @@ using ApplicationLayer.Models;
 using ApplicationLayer.QueryParams;
 using ApplicationLayer.Specifications.TripSpecifictions;
 using DomainLayer.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -72,8 +74,8 @@ namespace ApplicationLayer.Services
                     Languages = T.TripLanguages.Select(tl => tl.Language.Name).ToList(),
                     Includes = T.TripIncludes.Where(ti => ti.IsIncluded).Select(ti => ti.Includes.Name).ToList(),
                     NotIncludes = T.TripIncludes.Where(ti => !ti.IsIncluded).Select(ti => ti.Includes.Name).ToList(),
-                    MainImage = URLResolver.BuildFileUrl(T.TripImages.Where(i => i.IsMainImage).Select(img => img.ImageURL).FirstOrDefault()),
-                    Images = T.TripImages.Where(i => i.IsMainImage == false).Select(img => URLResolver.BuildFileUrl(img.ImageURL)).ToList(),
+                    MainImage = T.TripImages.Where(i => i.IsMainImage).Select( i => new ImageDTO { Id = i.Id, ImageURL = URLResolver.BuildFileUrl(i.ImageURL) }).FirstOrDefault(),
+                    Images = T.TripImages.Where(i => i.IsMainImage == false).Select(img => new ImageDTO {Id = img.Id, ImageURL = URLResolver.BuildFileUrl(img.ImageURL) }).ToList(),
                 }).FirstOrDefaultAsync();
 
             return trip is not null 
@@ -109,7 +111,6 @@ namespace ApplicationLayer.Services
 
             try
             {
-
                 #region Activities
                 var activities = await unitOfWork.Repository<Activity>()
                                         .GetAll()
@@ -130,7 +131,6 @@ namespace ApplicationLayer.Services
                     languages.Select(l => new TripLanguages { LanguageId = l.Id }));
                 #endregion
 
-
                 #region Includes
                 var Includes = await unitOfWork.Repository<Includes>()
                                                 .GetAll()
@@ -150,17 +150,6 @@ namespace ApplicationLayer.Services
                 Trip.TripIncludes.AddRange(
                     Includes.Select(i => new TripIncludes { IncludesId = i.Id, IsIncluded = false }));
                 #endregion
-
-
-                foreach (var image in TripDto.Images)
-                {
-                    if (image != null)
-                    {
-                        var imageUrl = await FileHandler.SaveFileAsync("TripImages", image);
-                        if (imageUrl is not null)
-                            Trip.TripImages.Add(new TripImages { ImageURL = imageUrl, IsMainImage = false });
-                    }
-                }
 
                 string MainImageUrl = await FileHandler.SaveFileAsync("TripImages", TripDto.MainImage);
 
@@ -185,9 +174,7 @@ namespace ApplicationLayer.Services
             }
             catch (Exception ex)
             {
-
-                foreach (var image in Trip.TripImages)
-                    FileHandler.DeleteFile(image.ImageURL);
+                FileHandler.DeleteFile(Trip.TripImages.Find(i => i.IsMainImage)?.ImageURL);
 
                 await transaction.RollbackAsync();
                 return APIResponse<string>.FailureResponse(500, null, "Failed To Add Trip.");
@@ -283,23 +270,7 @@ namespace ApplicationLayer.Services
                 }
                 #endregion
 
-                #region Images
-                foreach (var image in trip.TripImages)
-                {
-                    FileHandler.DeleteFile(image.ImageURL);
-                }
-
-                trip.TripImages.Clear();
-
-                foreach (var image in TripDto.Images)
-                {
-                    string url = await FileHandler.SaveFileAsync("TripImages", image);
-                    if (url != null)
-                    {
-                        trip.TripImages.Add(new TripImages { ImageURL = url, IsMainImage = false });
-                    }
-                }
-                #endregion
+                FileHandler.DeleteFile(trip.TripImages.Where(i => i.IsMainImage).Select(i => i.ImageURL).FirstOrDefault());
 
                 trip.TripImages.Add(new TripImages()
                 {
@@ -313,15 +284,98 @@ namespace ApplicationLayer.Services
 
             if (!result)
             {
-                foreach (var image in trip.TripImages)
-                    FileHandler.DeleteFile(image.ImageURL);
-
                 await transaction.RollbackAsync();
                 return APIResponse<string>.FailureResponse(500, null, "Failed to Update trip.");
             }
 
             await transaction.CommitAsync();
             return APIResponse<string>.SuccessResponse(200, null, "Trip Updated Successfully.");
+        }
+
+        public async Task<APIResponse<string>> AddImagesToTrip(int tripId, List<IFormFile> files)
+        {
+            var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(tripId);
+            if (trip == null)
+                return APIResponse<string>.FailureResponse(404, null, "Trip not found.");
+
+            var tripImagesIds = trip.TripImages.Select(i => i.Id).ToList();
+
+            using var transaction = await unitOfWork.BeginTransactionAsync();
+            try
+            {
+                foreach (var file in files)
+                {
+                    if (file != null)
+                    {
+                        var imageUrl = await FileHandler.SaveFileAsync("TripImages", file);
+                        if (imageUrl is not null)
+                        {
+                            trip.TripImages.Add(new TripImages { ImageURL = imageUrl, IsMainImage = false });
+                        }
+                    }
+                }
+
+                var result = await unitOfWork.CompleteAsync();
+                if (!result)
+                    throw new Exception("An Error Ocurred.");
+
+                await transaction.CommitAsync();
+                return APIResponse<string>.SuccessResponse(201, null, "Images added successfully.");
+            }
+            catch (Exception ex)
+            {
+                foreach (var image in trip.TripImages)
+                {
+                    if (!tripImagesIds.Contains(image.Id)) 
+                    FileHandler.DeleteFile(image.ImageURL);
+                }
+
+                await transaction.RollbackAsync();
+                return APIResponse<string>.FailureResponse(500, null, "Failed to add images.");
+            }
+        }
+    
+        public async Task<APIResponse<string>> DeleteImagesFromTrip(int tripId, List<int> imageIds)
+        {
+            var trip = await unitOfWork.Repository<Trip>().GetByIdAsync(tripId);
+            if (trip == null)
+                return APIResponse<string>.FailureResponse(404, null, "Trip not found.");
+
+            var TripImagesURLs = new List<string>();
+
+            using var transaction = await unitOfWork.BeginTransactionAsync();
+            try
+            {
+                foreach (var imageId in imageIds)
+                {
+                    var image = await unitOfWork.Repository<TripImages>().GetByIdAsync(imageId);
+                    if (image != null)
+                    {
+                        TripImagesURLs.Add(image.ImageURL);
+                        trip.TripImages.Remove(image);
+                    }
+                }
+
+                var result = await unitOfWork.CompleteAsync();
+                if (!result)
+                    throw new Exception("An Error Ocurred.");
+
+                foreach (var imageUrl in TripImagesURLs)
+                { 
+                    if (imageUrl != null)
+                    {
+                        FileHandler.DeleteFile(imageUrl);
+                    }
+                }
+
+                await transaction.CommitAsync();
+                return APIResponse<string>.SuccessResponse(200, null, "Images deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return APIResponse<string>.FailureResponse(500, null, "Failed to delete images.");
+            }
         }
     }
 }
